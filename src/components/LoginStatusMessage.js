@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import { NavigationActions } from 'react-navigation';
@@ -17,7 +18,7 @@ const LoginStatusMessage = ({ isLoggedIn, dispatch }) => {
   }
   return (
     <View>
-      <Text style={styles.welcome}>
+      <Text style={styles.welcome} testID={'loginMessage'}>
         {'You are "logged in" right now'}
       </Text>
       <Button
