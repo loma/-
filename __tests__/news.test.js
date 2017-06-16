@@ -40,10 +40,14 @@ const data = {
   dislike: '10',
 }
 
+const myActions = {
+  1: 1
+}
+
 it('render news correctly', () => {
   const tree = renderer.create(
     <Provider store={store}>
-      <News data={data}/>
+      <News data={data} myActions={myActions} like={()=>{}} dislike={()=>{}}/>
     </Provider>,
   ).toJSON();
 
@@ -75,7 +79,7 @@ it('dispatch like button', () => {
   const dislike = jest.fn()
   const tree = renderer.create(
     <Provider store={store}>
-      <News data={data} like={like} dislike={dislike}/>
+      <News data={data} myActions={myActions} like={like} dislike={dislike}/>
     </Provider>,
   ).toJSON()
   findById(tree, 'like_button_test').props.onClick()

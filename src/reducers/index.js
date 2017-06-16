@@ -48,9 +48,56 @@ function auth(state = initialAuthState, action) {
   }
 }
 
+const initialNewsState = {
+  myActions: {},
+  list: {
+    1: {
+      id: 1,
+      image_url: 'http://via.placeholder.com/200x200',
+      title: '30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership',
+      location: 'Fitness World @Lao-Itecc',
+      valid_till: '2017/6/18',
+      like: "10",
+      dislike: "20"
+    },
+    2: {
+      id: 2,
+      image_url: 'http://via.placeholder.com/200x200',
+      title: '30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership',
+      location: 'Fitness World @Lao-Itecc',
+      valid_till: '2017/6/18',
+      like: "10",
+      dislike: "20"
+    }
+  }
+};
+function news(state = initialNewsState, action) {
+  switch (action.type) {
+    case 'like':
+      var currentAction = Object.assign({}, state.myActions)
+      currentAction[action.value] = 1
+      return Object.assign({}, state, {
+        myActions: currentAction
+      })
+    case 'dislike':
+      var currentAction = Object.assign({}, state.myActions)
+      currentAction[action.value] = -1
+      return Object.assign({}, state, {
+        myActions: currentAction
+      })
+    case 'Login':
+      return { ...state, isLoggedIn: true };
+    case 'Logout':
+      return { ...state, isLoggedIn: false };
+    default:
+      return state;
+  }
+}
+
 const AppReducer = combineReducers({
   nav,
   auth,
+  news
 });
 
 export default AppReducer;

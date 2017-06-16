@@ -8,6 +8,7 @@ import {
   Text,
   RefreshControl,
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import LoginStatusMessage from './LoginStatusMessage';
 import AuthButton from './AuthButton';
@@ -21,15 +22,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
 });
-
-const data = {
-  image_url: 'http://via.placeholder.com/200x200',
-  title: '30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership',
-  location: 'Fitness World @Lao-Itecc',
-  valid_till: '2017/6/18',
-  like: "10",
-  dislike: "20"
-}
 
 var refreshing = false;
 var serverHost = 'https://borktor.57bytes.com/'
@@ -47,24 +39,30 @@ function _onRefresh() {
       refreshing = false;
   });
 }
-const MainScreen = () => (
-  <ScrollView
-  refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={_onRefresh.bind(this)}
-        />
-      }
-  >
-    <News data={data} like={()=>{}} dislike={()=>{}} />
-    <News data={data} like={()=>{}} dislike={()=>{}} />
-    <News data={data} like={()=>{}} dislike={()=>{}} />
-  </ScrollView>
-);
+const MainScreen = ({news, like, dislike, myActions}) => {
+  var allNews = []
+  var _like = like
+  var _dislike = dislike
+  for(var index in news) {
+    allNews.push(<News key={index} myActions={myActions} data={news[index]} dislike={_dislike} like={_like} />)
+  }
+  return (
+    <ScrollView
+    refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={_onRefresh.bind(this)}
+          />
+        }
+    >
+      {allNews}
+    </ScrollView>
+  )
+}
 
 var header = <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center',backgroundColor:'white'}} elevation={5}>
   <Image style={{width:40,height:40}} source={require('../img/logo.png')}/>
-  <Text style={{fontSize:18,color:'black'}}> ບອກຕໍ່ </Text>
+  <Text style={{fontSize:24,color:'#4b5056',fontWeight:"500"}}> ບອກຕໍ່ </Text>
 </View>
 
 MainScreen.navigationOptions = {
@@ -72,4 +70,20 @@ MainScreen.navigationOptions = {
   headerStyle: {textAlign:'center'}
 };
 
-export default MainScreen;
+MainScreen.propTypes = {
+  news: PropTypes.object.isRequired,
+  like: PropTypes.func.isRequired,
+  dislike: PropTypes.func.isRequired,
+  myActions: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = state => ({
+  news: state.news.list,
+  myActions: state.news.myActions,
+});
+const mapDispatchToProps = dispatch => ({
+  like: (id) => dispatch({ type: 'like', value:id }),
+  dislike: (id) => dispatch({ type: 'dislike', value:id }),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);

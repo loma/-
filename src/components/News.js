@@ -7,7 +7,10 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-const News = ({ data, like, dislike }) => (
+const News = ({ data, like, dislike, myActions }) => {
+  var likeBGColor = myActions[data.id] === 1 ? '#7c8ec4' : 'white'
+  var dislikeBGColor = myActions[data.id] === -1 ? '#c65e68' : 'white'
+return (
   <View style={{flexDirection:'row',borderBottomWidth:5,borderColor:'#777',backgroundColor:'white'}} elevation={5}>
     <View style={{flex:0,backgroundColor:'white',marginRight:5}} elevation={5}>
       <Image testID={'image_url_test'} style={{width:'100%',height:100}} source={{uri:data.image_url}} />
@@ -24,15 +27,15 @@ const News = ({ data, like, dislike }) => (
           <Text style={{fontSize:12}} testID={'valid_till_test'}>{data.valid_till}</Text>
         </View>
         <View style={{flexDirection:'row',justifyContent:'flex-end',}}>
-            <View elevation={3} style={{borderRadius:5,margin:5,paddingLeft:5,paddingRight:5,backgroundColor:'#7c8ec4',alignItems:'center'}}>
+            <View elevation={3} style={{borderRadius:5,margin:5,paddingLeft:5,paddingRight:5,backgroundColor:likeBGColor,alignItems:'center'}}>
               <TouchableOpacity style={{alignItems:'center',flexDirection:'row'}} testID={'like_button_test'} onPress={()=>{like(data.id)}}>
                 <Image source={require('../img/like.png')} style={{margin:5, width:20,height:20}} />
                 <Text style={{fontSize:10}} testID={'like_test'}>{data.like}</Text>
               </TouchableOpacity>
             </View>
           <TouchableOpacity testID={'dislike_button_test'} onPress={()=>{dislike(data.id)}}>
-            <View elevation={3} style={{borderRadius:5,margin:5,paddingLeft:5,paddingRight:5,backgroundColor:'#c65e68',alignItems:'center'}}>
-              <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}} testID={'like_button_test'} onPress={()=>{like(data.id)}}>
+            <View elevation={3} style={{borderRadius:5,margin:5,paddingLeft:5,paddingRight:5,backgroundColor:dislikeBGColor,alignItems:'center'}}>
+              <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}} testID={'like_button_test'} onPress={()=>{dislike(data.id)}}>
                 <Image source={require('../img/dislike.png')} style={{margin:5,width:20,height:20}} />
                 <Text style={{fontSize:10}} testID={'dislike_test'}>{data.dislike}</Text>
               </TouchableOpacity>
@@ -42,7 +45,8 @@ const News = ({ data, like, dislike }) => (
       </View>
     </View>
   </View>
-);
+)
+}
 
 News.propTypes = {
   data: PropTypes.object.isRequired,
