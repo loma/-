@@ -7,7 +7,14 @@ import {
   ScrollView,
   Text,
   RefreshControl,
+  TouchableOpacity,
 } from 'react-native';
+const MK = require('react-native-material-kit');
+const {
+  MKButton,
+  MKTouchable,
+  MKColor,
+} = MK;
 import { connect } from 'react-redux';
 
 import LoginStatusMessage from './LoginStatusMessage';
@@ -39,6 +46,29 @@ function _onRefresh() {
       refreshing = false;
   });
 }
+const ColoredFlatButton = MKButton.coloredFlatButton()
+  .withText('BUTTON')
+  .build();
+
+var button = <MKButton
+  backgroundColor={MKColor.Teal}
+  shadowRadius={2}
+  shadowOffset={{width:0, height:2}}
+  shadowOpacity={.7}
+  shadowColor="black"
+  onPress={() => {
+    console.log('hi, raised button!');
+  }}
+  >
+  <Text pointerEvents="none"
+        style={{color: 'white', fontWeight: 'bold',}}>
+    RAISED BUTTON
+  </Text>
+</MKButton>
+const PlainFab = MKButton.coloredFab()
+  .withStyle({borderColor:'white'})
+  .build();
+
 const MainScreen = ({news, like, dislike, myActions}) => {
   var allNews = []
   var _like = like
@@ -46,7 +76,9 @@ const MainScreen = ({news, like, dislike, myActions}) => {
   for(var index in news) {
     allNews.push(<News key={index} myActions={myActions} data={news[index]} dislike={_dislike} like={_like} />)
   }
+  allNews.push(<View key={0} style={{height:100}}></View>)
   return (
+    <View style={{flex:1}}>
     <ScrollView
     refreshControl={
           <RefreshControl
@@ -55,14 +87,22 @@ const MainScreen = ({news, like, dislike, myActions}) => {
           />
         }
     >
-      {allNews}
+    {allNews}
     </ScrollView>
+    <View style={{justifyContent:'flex-end',flexDirection:'row',position:'absolute',bottom:0,right:0}}>
+    <TouchableOpacity onPress={()=>{console.log('asdf')}} style={{position:'relative',padding: 20}}>
+            <PlainFab>
+            <Text style={{fontSize:24,color:'white'}}>+</Text>
+            </PlainFab>
+    </TouchableOpacity>
+          </View>
+    </View>
   )
 }
 
 var header = <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center',backgroundColor:'white'}} elevation={5}>
   <Image style={{width:40,height:40}} source={require('../img/logo.png')}/>
-  <Text style={{fontSize:24,color:'#4b5056',fontWeight:"500"}}> ບອກຕໍ່ </Text>
+  <Text style={{fontSize:20,color:'#4b5056',fontWeight:"500"}}> ບອກຕໍ່ </Text>
 </View>
 
 MainScreen.navigationOptions = {

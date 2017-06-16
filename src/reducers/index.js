@@ -68,6 +68,42 @@ const initialNewsState = {
       valid_till: '2017/6/18',
       like: "10",
       dislike: "20"
+    },
+    3: {
+      id: 3,
+      image_url: 'http://via.placeholder.com/200x200',
+      title: '30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership',
+      location: 'Fitness World @Lao-Itecc',
+      valid_till: '2017/6/18',
+      like: "10",
+      dislike: "20"
+    },
+    4: {
+      id: 4,
+      image_url: 'http://via.placeholder.com/200x200',
+      title: '30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership',
+      location: 'Fitness World @Lao-Itecc',
+      valid_till: '2017/6/18',
+      like: "10",
+      dislike: "20"
+    },
+    5: {
+      id: 5,
+      image_url: 'http://via.placeholder.com/200x200',
+      title: '30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership',
+      location: 'Fitness World @Lao-Itecc',
+      valid_till: '2017/6/18',
+      like: "10",
+      dislike: "20"
+    },
+    6: {
+      id: 6,
+      image_url: 'http://via.placeholder.com/200x200',
+      title: '30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership',
+      location: 'Fitness World @Lao-Itecc',
+      valid_till: '2017/6/18',
+      like: "10",
+      dislike: "20"
     }
   }
 };
