@@ -69,7 +69,7 @@ const PlainFab = MKButton.coloredFab()
   .withStyle({borderColor:'white'})
   .build();
 
-const MainScreen = ({news, like, dislike, myActions}) => {
+const MainScreen = ({news, like, dislike, myActions, createNews}) => {
   var allNews = []
   var _like = like
   var _dislike = dislike
@@ -89,12 +89,10 @@ const MainScreen = ({news, like, dislike, myActions}) => {
     >
     {allNews}
     </ScrollView>
-    <View style={{justifyContent:'flex-end',flexDirection:'row',position:'absolute',bottom:0,right:0}}>
-    <TouchableOpacity onPress={()=>{console.log('asdf')}} style={{position:'relative',padding: 20}}>
-            <PlainFab>
+    <View style={{padding:20,justifyContent:'flex-end',flexDirection:'row',position:'absolute',bottom:0,right:0}}>
+            <PlainFab onPress={()=>{createNews()}}>
             <Text style={{fontSize:24,color:'white'}}>+</Text>
             </PlainFab>
-    </TouchableOpacity>
           </View>
     </View>
   )
@@ -114,6 +112,7 @@ MainScreen.propTypes = {
   news: PropTypes.object.isRequired,
   like: PropTypes.func.isRequired,
   dislike: PropTypes.func.isRequired,
+  createNews: PropTypes.func.isRequired,
   myActions: PropTypes.object.isRequired,
 };
 
@@ -124,6 +123,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   like: (id) => dispatch({ type: 'like', value:id }),
   dislike: (id) => dispatch({ type: 'dislike', value:id }),
+  createNews: (id) => dispatch({ type: 'createNews' }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);

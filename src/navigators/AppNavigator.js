@@ -6,11 +6,13 @@ import { addNavigationHelpers, StackNavigator } from 'react-navigation';
 import LoginScreen from '../components/LoginScreen';
 import MainScreen from '../components/MainScreen';
 import ProfileScreen from '../components/ProfileScreen';
+import CreateScreen from '../components/CreateScreen';
 
 export const AppNavigator = StackNavigator({
   Login: { screen: LoginScreen },
   Main: { screen: MainScreen },
   Profile: { screen: ProfileScreen },
+  Create: { screen: CreateScreen },
 });
 
 const AppWithNavigationState = ({ dispatch, nav }) => (

@@ -51,7 +51,6 @@ it('render news correctly', () => {
     </Provider>,
   ).toJSON();
 
-  expect(findById(tree, 'image_url_test').props.source.uri).toBe(data.image_url)
   expect(findById(tree, 'title_test').children[0]).toBe(data.title)
   expect(findById(tree, 'location_test').children[0]).toBe(data.location)
   expect(findById(tree, 'valid_till_test').children[0]).toBe(data.valid_till)

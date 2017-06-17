@@ -14,6 +14,18 @@ const initialNavState = AppNavigator.router.getStateForAction(
 function nav(state = initialNavState, action) {
   let nextState;
   switch (action.type) {
+    case 'Main':
+      nextState = AppNavigator.router.getStateForAction(
+        NavigationActions.back(),
+        state
+      );
+      break;
+    case 'createNews':
+      nextState = AppNavigator.router.getStateForAction(
+        NavigationActions.navigate({ routeName: 'Create' }),
+        state
+      );
+      break;
     case 'Login':
       nextState = AppNavigator.router.getStateForAction(
         NavigationActions.back(),
@@ -50,65 +62,16 @@ function auth(state = initialAuthState, action) {
 
 const initialNewsState = {
   myActions: {},
-  list: {
-    1: {
-      id: 1,
-      image_url: 'http://via.placeholder.com/200x200',
-      title: '30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership',
-      location: 'Fitness World @Lao-Itecc',
-      valid_till: '2017/6/18',
-      like: "10",
-      dislike: "20"
-    },
-    2: {
-      id: 2,
-      image_url: 'http://via.placeholder.com/200x200',
-      title: '30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership',
-      location: 'Fitness World @Lao-Itecc',
-      valid_till: '2017/6/18',
-      like: "10",
-      dislike: "20"
-    },
-    3: {
-      id: 3,
-      image_url: 'http://via.placeholder.com/200x200',
-      title: '30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership',
-      location: 'Fitness World @Lao-Itecc',
-      valid_till: '2017/6/18',
-      like: "10",
-      dislike: "20"
-    },
-    4: {
-      id: 4,
-      image_url: 'http://via.placeholder.com/200x200',
-      title: '30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership',
-      location: 'Fitness World @Lao-Itecc',
-      valid_till: '2017/6/18',
-      like: "10",
-      dislike: "20"
-    },
-    5: {
-      id: 5,
-      image_url: 'http://via.placeholder.com/200x200',
-      title: '30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership',
-      location: 'Fitness World @Lao-Itecc',
-      valid_till: '2017/6/18',
-      like: "10",
-      dislike: "20"
-    },
-    6: {
-      id: 6,
-      image_url: 'http://via.placeholder.com/200x200',
-      title: '30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership, 30% discount for 3 months membership',
-      location: 'Fitness World @Lao-Itecc',
-      valid_till: '2017/6/18',
-      like: "10",
-      dislike: "20"
-    }
-  }
+  list: { }
 };
 function news(state = initialNewsState, action) {
   switch (action.type) {
+    case 'Main':
+      var currentList = Object.assign({}, state.list)
+      currentList[action.value.id] = action.value
+      return Object.assign({}, state, {
+        list: currentList
+      })
     case 'like':
       var currentAction = Object.assign({}, state.myActions)
       currentAction[action.value] = 1
