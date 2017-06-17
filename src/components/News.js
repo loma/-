@@ -13,7 +13,7 @@ const News = ({ data, like, dislike, myActions }) => {
 return (
   <View style={{flexDirection:'row',borderBottomWidth:5,borderColor:'#777',backgroundColor:'white'}} elevation={5}>
     <View style={{flex:1,flexDirection:'column',marginRight:5,marginLeft:5}}>
-      <Text numberOfLines={3} ellipsizeMode={'tail'} style={{fontSize:12}} testID={'title_test'}>{data.title}</Text>
+      <Text numberOfLines={5} ellipsizeMode={'tail'} style={{fontSize:12,marginTop:5,marginLeft:5}} testID={'title_test'}>{data.title}</Text>
       <View style={{flexDirection:'row',alignItems:'center' }}>
         <Image source={require('../img/gps.png')} style={{margin:2, width:20,height:20}} />
         <Text style={{fontSize:12}} testID={'location_test'}>{data.location}</Text>

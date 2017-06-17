@@ -73,8 +73,15 @@ const MainScreen = ({news, like, dislike, myActions, createNews}) => {
   var allNews = []
   var _like = like
   var _dislike = dislike
-  for(var index in news) {
-    allNews.push(<News key={index} myActions={myActions} data={news[index]} dislike={_dislike} like={_like} />)
+  var keys = Object.keys(news);
+  var values = keys.map(function(v) { return news[v]; });
+  values.sort((a,b) => {
+    if (a.like===b.like) return a.dislike-b.dislike
+    return b.like-a.like
+  })
+
+  for(var index in values) {
+    allNews.push(<News key={values[index].id} myActions={myActions} data={values[index]} dislike={_dislike} like={_like} />)
   }
   allNews.push(<View key={0} style={{height:100}}></View>)
   return (
