@@ -58,7 +58,9 @@ function auth(state = initialAuthState, action) {
   }
 }
 
+const uniqueId = require('react-native-device-info').getUniqueID();
 const initialNewsState = {
+  userId: uniqueId,
   myActions: {},
   list: { },
   tempNews: {
@@ -70,8 +72,14 @@ const initialNewsState = {
 var _id = 1;
 function news(state = initialNewsState, action) {
   switch (action.type) {
+    case 'initLikes':
+      var newActions = {}
+      for(var index in action.value)
+        newActions[action.value[index].news_id] = action.value[index].status
+      return Object.assign({}, state, {
+        myActions: newActions,
+      })
     case 'Main':
-        
       var currentList = Object.assign({}, state.list)
       currentList[action.value.id] = action.value
       return Object.assign({}, state, {
@@ -80,17 +88,37 @@ function news(state = initialNewsState, action) {
       })
     case 'like':
       var currentNews = Object.assign({}, state.list)
-      console.log('news' + JSON.stringify(currentNews))
       var currentAction = Object.assign({}, state.myActions)
+      var _like, _dislike = 0, _action;
       if (currentAction[action.value] === 1) {
-        currentAction[action.value] = 0
-        currentNews[action.value].like -= 1;
+        _action = 0
+        _like = -1
       } else {
-        if (currentAction[action.value] === -1)
-          currentNews[action.value].dislike -= 1;
-        currentAction[action.value] = 1
-        currentNews[action.value].like += 1;
+        if (currentAction[action.value] === -1) _dislike = -1
+        _action = 1
+        _like = 1
       }
+      currentNews[action.value].dislike += _dislike;
+      currentAction[action.value] = _action;
+      currentNews[action.value].like += _like;
+
+      var updateStatus = {
+        dislike:_dislike,
+        like:_like,
+        status:_action,
+        uid: uniqueId
+      }
+      fetch('http://10.0.2.2:3000/news/'+action.value+'.json', {
+        method: 'PUT',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', },
+        body: JSON.stringify(updateStatus)
+      })
+        .then((response) => response.json())
+        .then((status) => {
+        })
+        .catch((error) => {
+        });
+
       return Object.assign({}, state, {
         myActions: currentAction,
         list: currentNews
@@ -98,15 +126,36 @@ function news(state = initialNewsState, action) {
     case 'dislike':
       var currentNews = Object.assign({}, state.list)
       var currentAction = Object.assign({}, state.myActions)
+      var _like = 0, _dislike = 0, _action;
       if (currentAction[action.value] === -1) {
-        currentNews[action.value].dislike -= 1;
-        currentAction[action.value] = 0
+        _dislike = -1
+        _action = 0
       } else {
-        if (currentAction[action.value] === 1)
-          currentNews[action.value].like -= 1;
-        currentNews[action.value].dislike += 1;
-        currentAction[action.value] = -1
+        if (currentAction[action.value] === 1) _like = -1
+        _dislike = 1
+        _action = -1
       }
+      currentNews[action.value].dislike += _dislike;
+      currentAction[action.value] = _action;
+      currentNews[action.value].like += _like;
+
+      var updateStatus = {
+        dislike:_dislike,
+        like:_like,
+        status:_action,
+        uid: uniqueId
+      }
+      fetch('http://10.0.2.2:3000/news/'+action.value+'.json', {
+        method: 'PUT',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', },
+        body: JSON.stringify(updateStatus)
+      })
+        .then((response) => response.json())
+        .then((status) => {
+        })
+        .catch((error) => {
+        });
+
       return Object.assign({}, state, {
         myActions: currentAction,
         list: currentNews
@@ -135,10 +184,12 @@ function news(state = initialNewsState, action) {
   }
 }
 
+
+
 const AppReducer = combineReducers({
   nav,
   auth,
-  news
+  news,
 });
 
 export default AppReducer;

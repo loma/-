@@ -31,9 +31,17 @@ const styles = StyleSheet.create({
 var refreshing = false;
 var serverHost = 'http://10.0.2.2:3000/'
 var timeStamp = 0
-function _onRefresh(init) {
+const uniqueId = require('react-native-device-info').getUniqueID();
+function _onRefresh(init, initLikes) {
   refreshing = true;
-  fetch(serverHost + '/news.json?ts='+ timeStamp)
+  fetch(serverHost + '/likes.json?uid='+ uniqueId)
+    .then((response) => response.json())
+    .then((likes) => {
+      initLikes(likes)
+    })
+    .catch((error) => { });
+
+  fetch(serverHost + '/news.json')
     .then((response) => response.json())
     .then((news) => {
       refreshing = false;
@@ -44,6 +52,7 @@ function _onRefresh(init) {
       init([])
   });
 }
+
 const ColoredFlatButton = MKButton.coloredFlatButton()
   .withText('BUTTON')
   .build();
@@ -52,11 +61,10 @@ const PlainFab = MKButton.coloredFab()
   .withStyle({borderColor:'white'})
   .build();
 
-const MainScreen = ({news, like, dislike, myActions, createNews, loaded, init}) => {
-
+const MainScreen = ({news, initLikes, like, dislike, myActions, createNews, loaded, init}) => {
   if (!loaded.status) {
     refreshing = true
-    _onRefresh(init)
+    _onRefresh(init, initLikes)
   }
 
   var allNews = []
@@ -82,7 +90,7 @@ const MainScreen = ({news, like, dislike, myActions, createNews, loaded, init}) 
     refreshControl={
           <RefreshControl
             refreshing={refreshing}
-            onRefresh={()=>{_onRefresh(init)}}
+            onRefresh={()=>{_onRefresh(init, initLikes)}}
           />
         }
     >
@@ -126,6 +134,7 @@ const mapDispatchToProps = dispatch => ({
   dislike: (id) => dispatch({ type: 'dislike', value:id }),
   createNews: (id) => dispatch({ type: 'createNews' }),
   init: (news) => dispatch({ type: 'init', value:news }),
+  initLikes: (likes) => dispatch({ type: 'initLikes', value:likes }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);

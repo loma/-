@@ -87,7 +87,8 @@ const CreateScreen = ({
         onFocus = {
             (e) => {
                 openDate().then((d) => {
-                    setTempDate(new Date(d.year, d.month, d.day + 1))
+                    if (d.action === 'dateSetAction')
+                      setTempDate(new Date(d.year, d.month, d.day + 1))
                     Keyboard.dismiss()
                 })
             }
@@ -101,7 +102,7 @@ const CreateScreen = ({
       var news = Object.assign({}, tempNews)
       if (news.title === undefined) return
       if (news.location === undefined) return
-      if (news.valid_till === undefined) return 
+      if (news.valid_till === undefined) return
 
       //news.id = _id++;
       //currentList[news.id] = news
