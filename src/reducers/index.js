@@ -61,30 +61,26 @@ function auth(state = initialAuthState, action) {
 const initialNewsState = {
   myActions: {},
   list: { },
-  tempNews: {      like: 0,
-      dislike: 0
- }
+  tempNews: {
+    like: 0,
+    dislike: 0
+  },
+  loaded: {status:false}
 };
 var _id = 1;
 function news(state = initialNewsState, action) {
   switch (action.type) {
     case 'Main':
-      var news = Object.assign({}, state.tempNews)
-      if (news.title === undefined) return state
-      if (news.location === undefined) return state
-      if (news.valid_till === undefined) return state
+        
       var currentList = Object.assign({}, state.list)
-      news.id = _id++;
-      currentList[news.id] = news
+      currentList[action.value.id] = action.value
       return Object.assign({}, state, {
         list: currentList,
-        tempNews: {
-      like: 0,
-      dislike: 0
-        }
+        tempNews: { like: 0, dislike: 0 }
       })
     case 'like':
       var currentNews = Object.assign({}, state.list)
+      console.log('news' + JSON.stringify(currentNews))
       var currentAction = Object.assign({}, state.myActions)
       if (currentAction[action.value] === 1) {
         currentAction[action.value] = 0
@@ -125,6 +121,14 @@ function news(state = initialNewsState, action) {
       })
       return Object.assign({}, state, {
         tempNews: news
+      })
+    case 'init':
+      var newList = {}
+      for (var index in action.value)
+        newList[action.value[index].id] = action.value[index]
+      return Object.assign({}, state, {
+        list: newList,
+        loaded: {status:true}
       })
     default:
       return state;

@@ -8,11 +8,11 @@ import {
   Text,
   RefreshControl,
   TouchableOpacity,
+  ActivityIndicator
 } from 'react-native';
 const MK = require('react-native-material-kit');
 const {
   MKButton,
-  MKTouchable,
   MKColor,
 } = MK;
 import { connect } from 'react-redux';
@@ -29,19 +29,19 @@ const styles = StyleSheet.create({
 });
 
 var refreshing = false;
-var serverHost = 'https://borktor.57bytes.com/'
+var serverHost = 'http://10.0.2.2:3000/'
 var timeStamp = 0
-function _onRefresh() {
+function _onRefresh(init) {
   refreshing = true;
   fetch(serverHost + '/news.json?ts='+ timeStamp)
     .then((response) => response.json())
     .then((news) => {
-      AsyncStorage.setItem('@NEWS:KEY', JSON.stringify(news));
       refreshing = false;
+      init(news)
     })
     .catch((error) => {
-      console.error(error);
       refreshing = false;
+      init([])
   });
 }
 const ColoredFlatButton = MKButton.coloredFlatButton()
@@ -52,7 +52,13 @@ const PlainFab = MKButton.coloredFab()
   .withStyle({borderColor:'white'})
   .build();
 
-const MainScreen = ({news, like, dislike, myActions, createNews}) => {
+const MainScreen = ({news, like, dislike, myActions, createNews, loaded, init}) => {
+
+  if (!loaded.status) {
+    refreshing = true
+    _onRefresh(init)
+  }
+
   var allNews = []
   var _like = like
   var _dislike = dislike
@@ -76,7 +82,7 @@ const MainScreen = ({news, like, dislike, myActions, createNews}) => {
     refreshControl={
           <RefreshControl
             refreshing={refreshing}
-            onRefresh={_onRefresh.bind(this)}
+            onRefresh={()=>{_onRefresh(init)}}
           />
         }
     >
@@ -107,16 +113,19 @@ MainScreen.propTypes = {
   dislike: PropTypes.func.isRequired,
   createNews: PropTypes.func.isRequired,
   myActions: PropTypes.object.isRequired,
+  loaded: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   news: state.news.list,
+  loaded: state.news.loaded,
   myActions: state.news.myActions,
 });
 const mapDispatchToProps = dispatch => ({
   like: (id) => dispatch({ type: 'like', value:id }),
   dislike: (id) => dispatch({ type: 'dislike', value:id }),
   createNews: (id) => dispatch({ type: 'createNews' }),
+  init: (news) => dispatch({ type: 'init', value:news }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);

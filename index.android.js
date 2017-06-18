@@ -7,9 +7,8 @@ import { createStore } from 'redux';
 import AppReducer from './src/reducers';
 import AppWithNavigationState from './src/navigators/AppNavigator';
 
-class ReduxExampleApp extends React.Component {
+class App extends React.Component {
   store = createStore(AppReducer);
-
   render() {
     return (
       <Provider store={this.store}>
@@ -19,6 +18,4 @@ class ReduxExampleApp extends React.Component {
   }
 }
 
-AppRegistry.registerComponent('BorkTor', () => ReduxExampleApp);
-
-export default ReduxExampleApp;
+AppRegistry.registerComponent('BorkTor', () => App);

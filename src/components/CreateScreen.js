@@ -97,9 +97,29 @@ const CreateScreen = ({
         < Text / >
         < ColoredRaisedButton onPress = {
             () => {
+
+      var news = Object.assign({}, tempNews)
+      if (news.title === undefined) return
+      if (news.location === undefined) return
+      if (news.valid_till === undefined) return 
+
+      //news.id = _id++;
+      //currentList[news.id] = news
+      fetch('http://10.0.2.2:3000/news.json', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', },
+        body: JSON.stringify(news)
+      })
+        .then((response) => response.json())
+        .then((news) => {
                 navigation.dispatch({
-                    type: 'Main'
+                    type: 'Main',
+                    value: news
                 });
+        })
+        .catch((error) => {
+        });
+
             }
         } />
       < /View>

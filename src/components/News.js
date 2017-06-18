@@ -10,6 +10,7 @@ import {
 const News = ({ data, like, dislike, myActions }) => {
   var likeBGColor = myActions[data.id] === 1 ? '#7c8ec4' : 'white'
   var dislikeBGColor = myActions[data.id] === -1 ? '#c65e68' : 'white'
+  var till = new Date(data.valid_till)
 return (
   <View style={{flexDirection:'row',borderBottomWidth:5,borderColor:'#777',backgroundColor:'white'}} elevation={5}>
     <View style={{flex:1,flexDirection:'column',marginRight:5,marginLeft:5}}>
@@ -21,7 +22,7 @@ return (
       <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center',marginTop:-8 }}>
         <View style={{flexDirection:'row',alignItems:'center'}}>
           <Image source={require('../img/calendar.png')} style={{margin:2, width:20,height:20}} />
-          <Text style={{fontSize:12}} testID={'valid_till_test'}>{data.valid_till}</Text>
+          <Text style={{fontSize:12}} testID={'valid_till_test'}>{till.toISOString().substring(0,10)}</Text>
         </View>
         <View style={{flexDirection:'row',justifyContent:'flex-end',}}>
             <View elevation={2} style={{borderRadius:3,margin:5,paddingLeft:5,paddingRight:5,backgroundColor:likeBGColor,alignItems:'center'}}>
