@@ -17,8 +17,6 @@ const {
 } = MK;
 import { connect } from 'react-redux';
 
-import LoginStatusMessage from './LoginStatusMessage';
-import AuthButton from './AuthButton';
 import News from './News';
 
 const styles = StyleSheet.create({
@@ -50,21 +48,6 @@ const ColoredFlatButton = MKButton.coloredFlatButton()
   .withText('BUTTON')
   .build();
 
-var button = <MKButton
-  backgroundColor={MKColor.Teal}
-  shadowRadius={2}
-  shadowOffset={{width:0, height:2}}
-  shadowOpacity={.7}
-  shadowColor="black"
-  onPress={() => {
-    console.log('hi, raised button!');
-  }}
-  >
-  <Text pointerEvents="none"
-        style={{color: 'white', fontWeight: 'bold',}}>
-    RAISED BUTTON
-  </Text>
-</MKButton>
 const PlainFab = MKButton.coloredFab()
   .withStyle({borderColor:'white'})
   .build();
@@ -101,7 +84,7 @@ const MainScreen = ({news, like, dislike, myActions, createNews}) => {
     </ScrollView>
     <View style={{padding:20,justifyContent:'flex-end',flexDirection:'row',position:'absolute',bottom:0,right:0}}>
             <PlainFab onPress={()=>{createNews()}}>
-            <Text style={{fontSize:24,color:'white'}}>+</Text>
+              <Text style={{fontSize:24,color:'white'}}>+</Text>
             </PlainFab>
           </View>
     </View>
