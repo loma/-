@@ -81,7 +81,10 @@ const MainScreen = ({news, like, dislike, myActions, createNews}) => {
   })
 
   for(var index in values) {
-    allNews.push(<News key={values[index].id} myActions={myActions} data={values[index]} dislike={_dislike} like={_like} />)
+    var date = new Date(values[index].valid_till)
+    var now = new Date()
+    if (date - now > 0)
+      allNews.push(<News key={values[index].id} myActions={myActions} data={values[index]} dislike={_dislike} like={_like} />)
   }
   allNews.push(<View key={0} style={{height:100}}></View>)
   return (
