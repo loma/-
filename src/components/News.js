@@ -14,15 +14,33 @@ const News = ({ data, like, dislike, myActions }) => {
 return (
   <View style={{flexDirection:'row',borderBottomWidth:5,borderColor:'#777',backgroundColor:'white'}} elevation={5}>
     <View style={{flex:1,flexDirection:'column',marginRight:5,marginLeft:5}}>
-      <Text numberOfLines={5} ellipsizeMode={'tail'} style={{fontSize:12,marginTop:5,marginLeft:5}} testID={'title_test'}>{data.title}</Text>
+
+      <Text numberOfLines={5} ellipsizeMode={'tail'}
+        style={{fontSize:12,fontFamily: 'Saysettha OT',marginTop:5,marginLeft:5,padding:5}} 
+        testID={'title_test'}>{data.title}</Text>
+
+      <View style={{flexDirection:'row',alignItems:'center' }}>
+        <Image source={require('../img/gps.png')} style={{margin:2, width:20,height:20}} />
+        <Text style={{fontSize:12,textDecorationLine:'line-through'}} testID={'location_test'}>Kip 50,000</Text>
+        <Text style={{fontSize:12}} testID={'location_test'}> Kip 20,000</Text>
+        <Text style={{fontSize:12, color:'red'}} testID={'location_test'}> -60%</Text>
+      </View>
       <View style={{flexDirection:'row',alignItems:'center' }}>
         <Image source={require('../img/gps.png')} style={{margin:2, width:20,height:20}} />
         <Text style={{fontSize:12}} testID={'location_test'}>{data.location}</Text>
       </View>
+      <View style={{flexDirection:'row',alignItems:'center' }}>
+        <Image source={require('../img/gps.png')} style={{margin:2, width:20,height:20}} />
+        <Text style={{fontSize:12}} testID={'location_test'}>Tel: +85620 1234 5678</Text>
+      </View>
+      <View style={{flexDirection:'row',alignItems:'center' }}>
+        <Image source={require('../img/gps.png')} style={{margin:2, width:20,height:20}} />
+        <Text style={{fontSize:12}} testID={'location_test'}>Link to facebook</Text>
+      </View>
       <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center',marginTop:-8 }}>
         <View style={{flexDirection:'row',alignItems:'center'}}>
           <Image source={require('../img/calendar.png')} style={{margin:2, width:20,height:20}} />
-          <Text style={{fontSize:12}} testID={'valid_till_test'}>{till.toISOString().substring(0,10)}</Text>
+          <Text style={{fontSize:12}} testID={'valid_till_test'}>Unitll - {till.toISOString().substring(0,10)}</Text>
         </View>
         <View style={{flexDirection:'row',justifyContent:'flex-end',}}>
             <View elevation={2} style={{borderRadius:3,margin:5,paddingLeft:5,paddingRight:5,backgroundColor:likeBGColor,alignItems:'center'}}>

@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 });
 
 var refreshing = false;
-var serverHost = 'http://10.0.2.2:3000/'
+var serverHost = 'https://borktor.57bytes.com/'
 var timeStamp = 0
 const uniqueId = require('react-native-device-info').getUniqueID();
 function _onRefresh(init, initLikes) {
@@ -96,11 +96,6 @@ const MainScreen = ({news, initLikes, like, dislike, myActions, createNews, load
     >
     {allNews}
     </ScrollView>
-    <View style={{padding:20,justifyContent:'flex-end',flexDirection:'row',position:'absolute',bottom:0,right:0}}>
-            <PlainFab onPress={()=>{createNews()}}>
-              <Text style={{fontSize:24,color:'white'}}>+</Text>
-            </PlainFab>
-          </View>
     </View>
   )
 }
