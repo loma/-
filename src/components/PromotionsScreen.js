@@ -8,8 +8,7 @@ import {
   Text,
   RefreshControl,
   TouchableOpacity,
-  ActivityIndicator,
-  Platform
+  ActivityIndicator
 } from 'react-native';
 const MK = require('react-native-material-kit');
 const {
@@ -62,7 +61,7 @@ const PlainFab = MKButton.coloredFab()
   .withStyle({borderColor:'white'})
   .build();
 
-const MainScreen = ({news, promotions, initLikes, like, dislike, myActions, createNews, loaded, init}) => {
+const MainScreen = ({news, initLikes, like, dislike, myActions, createNews, loaded, init}) => {
   if (!loaded.status) {
     refreshing = true
     _onRefresh(init, initLikes)
@@ -95,37 +94,19 @@ const MainScreen = ({news, promotions, initLikes, like, dislike, myActions, crea
           />
         }
     >
-
-    <View style={{marginTop:30,marginLeft:30,marginRight:30,flexDirection:'row',justifyContent:'space-around'}}>
-      <TouchableOpacity onPress={()=>{promotions()}}>
-        <View style={{justifyContent:'center',alignItems:'center'}}>
-          <Image style={{width:100,height:100}} source={require('../img/f_b.png')} />
-          <Text style={{marginTop: 15}}>Food and Beverage</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={()=>{promotions()}}>
-        <View style={{justifyContent:'center',alignItems:'center'}}>
-          <Image style={{width:100,height:100}} source={require('../img/fashion.png')} />
-          <Text style={{marginTop: 15}}>Fashion</Text>
-        </View>
-      </TouchableOpacity>
-    </View>
-
+    {allNews}
     </ScrollView>
     </View>
   )
 }
 
-var header = <View style={{
-  marginTop:(Platform.OS === 'ios') ? 20 : 0,
-  flexDirection:'row',justifyContent:'center',alignItems:'center',backgroundColor:'white'}} elevation={5}>
+var header = <View style={{marginTop:30,flexDirection:'row',justifyContent:'center',alignItems:'center',backgroundColor:'white'}} elevation={5}>
   <Image style={{width:40,height:40}} source={require('../img/logo.png')}/>
   <Text style={{fontFamily:'Saysettha ot',fontSize:20,color:'#4b5056',fontWeight:"500",padding:5}}> ບອກຕໍ່ </Text>
 </View>
 
 MainScreen.navigationOptions = {
-  header: header,
-  headerStyle: {textAlign:'center'}
+  title: 'Promotions List'
 };
 
 MainScreen.propTypes = {
@@ -133,7 +114,6 @@ MainScreen.propTypes = {
   like: PropTypes.func.isRequired,
   dislike: PropTypes.func.isRequired,
   createNews: PropTypes.func.isRequired,
-  promotions: PropTypes.func.isRequired,
   myActions: PropTypes.object.isRequired,
   loaded: PropTypes.object.isRequired,
 };
@@ -149,7 +129,6 @@ const mapDispatchToProps = dispatch => ({
   createNews: (id) => dispatch({ type: 'createNews' }),
   init: (news) => dispatch({ type: 'init', value:news }),
   initLikes: (likes) => dispatch({ type: 'initLikes', value:likes }),
-  promotions: () => dispatch({ type: 'promotions' }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);

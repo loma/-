@@ -12,6 +12,12 @@ const initialNavState = AppNavigator.router.getStateForAction(
 function nav(state = initialNavState, action) {
   let nextState;
   switch (action.type) {
+    case 'promotions':
+      nextState = AppNavigator.router.getStateForAction(
+        NavigationActions.navigate({ routeName: 'Promotions' }),
+        state
+      );
+      break;
     case 'Main':
       nextState = AppNavigator.router.getStateForAction(
         NavigationActions.back(),
