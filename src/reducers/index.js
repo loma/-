@@ -14,31 +14,13 @@ function nav(state = initialNavState, action) {
   switch (action.type) {
     case 'promotions':
       nextState = AppNavigator.router.getStateForAction(
-        NavigationActions.navigate({ routeName: 'Promotions' }),
+        NavigationActions.navigate({ routeName: 'Promotions', params: {name: action.name}}),
         state
       );
       break;
     case 'Main':
       nextState = AppNavigator.router.getStateForAction(
         NavigationActions.back(),
-        state
-      );
-      break;
-    case 'createNews':
-      nextState = AppNavigator.router.getStateForAction(
-        NavigationActions.navigate({ routeName: 'Create' }),
-        state
-      );
-      break;
-    case 'Login':
-      nextState = AppNavigator.router.getStateForAction(
-        NavigationActions.back(),
-        state
-      );
-      break;
-    case 'Logout':
-      nextState = AppNavigator.router.getStateForAction(
-        NavigationActions.navigate({ routeName: 'Login' }),
         state
       );
       break;
@@ -51,136 +33,52 @@ function nav(state = initialNavState, action) {
   return nextState || state;
 }
 
-const initialAuthState = { isLoggedIn: false };
-
-function auth(state = initialAuthState, action) {
-  switch (action.type) {
-    case 'Login':
-      return { ...state, isLoggedIn: true };
-    case 'Logout':
-      return { ...state, isLoggedIn: false };
-    default:
-      return state;
-  }
-}
-
 const uniqueId = require('react-native-device-info').getUniqueID();
 const initialNewsState = {
   userId: uniqueId,
-  myActions: {},
   list: { },
-  tempNews: {
-    like: 0,
-    dislike: 0
-  },
-  loaded: {status:false}
+  loaded: {status:false},
+  visible: false,
+  initialPage: 0,
+  images: [],
+  categories: [],
+  selectedCatId: 0
 };
-var _id = 1;
 function news(state = initialNewsState, action) {
   switch (action.type) {
-    case 'initLikes':
-      var newActions = {}
-      for(var index in action.value)
-        newActions[action.value[index].news_id] = action.value[index].status
+    case 'promotions':
       return Object.assign({}, state, {
-        myActions: newActions,
+        selectedCatId: action.value
       })
     case 'Main':
       var currentList = Object.assign({}, state.list)
       currentList[action.value.id] = action.value
+      currentList[action.value.id]['images'] = []
       return Object.assign({}, state, {
         list: currentList,
         tempNews: { like: 0, dislike: 0 }
       })
-    case 'like':
-      var currentNews = Object.assign({}, state.list)
-      var currentAction = Object.assign({}, state.myActions)
-      var _like, _dislike = 0, _action;
-      if (currentAction[action.value] === 1) {
-        _action = 0
-        _like = -1
-      } else {
-        if (currentAction[action.value] === -1) _dislike = -1
-        _action = 1
-        _like = 1
-      }
-      currentNews[action.value].dislike += _dislike;
-      currentAction[action.value] = _action;
-      currentNews[action.value].like += _like;
-
-      var updateStatus = {
-        dislike:_dislike,
-        like:_like,
-        status:_action,
-        uid: uniqueId
-      }
-      fetch('http://10.0.2.2:3000/news/'+action.value+'.json', {
-        method: 'PUT',
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', },
-        body: JSON.stringify(updateStatus)
-      })
-        .then((response) => response.json())
-        .then((status) => {
-        })
-        .catch((error) => {
-        });
-
+    case 'setImage':
       return Object.assign({}, state, {
-        myActions: currentAction,
-        list: currentNews
+        initialPage: action.initialPage,
+        images: action.images
       })
-    case 'dislike':
-      var currentNews = Object.assign({}, state.list)
-      var currentAction = Object.assign({}, state.myActions)
-      var _like = 0, _dislike = 0, _action;
-      if (currentAction[action.value] === -1) {
-        _dislike = -1
-        _action = 0
-      } else {
-        if (currentAction[action.value] === 1) _like = -1
-        _dislike = 1
-        _action = -1
-      }
-      currentNews[action.value].dislike += _dislike;
-      currentAction[action.value] = _action;
-      currentNews[action.value].like += _like;
-
-      var updateStatus = {
-        dislike:_dislike,
-        like:_like,
-        status:_action,
-        uid: uniqueId
-      }
-      fetch('http://10.0.2.2:3000/news/'+action.value+'.json', {
-        method: 'PUT',
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', },
-        body: JSON.stringify(updateStatus)
-      })
-        .then((response) => response.json())
-        .then((status) => {
-        })
-        .catch((error) => {
-        });
-
+    case 'setModalVisible':
       return Object.assign({}, state, {
-        myActions: currentAction,
-        list: currentNews
+        visible: action.value,
       })
-    case 'Login':
-      return { ...state, isLoggedIn: true };
-    case 'Logout':
-      return { ...state, isLoggedIn: false };
-    case 'setTempDate':
-      var news = Object.assign({}, state.tempNews, {
-        valid_till: action.value.toISOString().substring(0, 10)
-      })
+    case 'initCategories':
       return Object.assign({}, state, {
-        tempNews: news
+        categories: action.value,
       })
     case 'init':
       var newList = {}
-      for (var index in action.value)
-        newList[action.value[index].id] = action.value[index]
+      for (var index in action.value) {
+        var each = action.value[index]
+        newList[each.id] = each
+        if (each.images) newList[each.id]['images'] = each.images.split(',')
+        else newList[each.id]['images'] = []
+      }
       return Object.assign({}, state, {
         list: newList,
         loaded: {status:true}
@@ -194,7 +92,6 @@ function news(state = initialNewsState, action) {
 
 const AppReducer = combineReducers({
   nav,
-  auth,
   news,
 });
 

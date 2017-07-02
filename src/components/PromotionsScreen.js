@@ -7,16 +7,8 @@ import {
   ScrollView,
   Text,
   RefreshControl,
-  TouchableOpacity,
-  ActivityIndicator
 } from 'react-native';
-const MK = require('react-native-material-kit');
-const {
-  MKButton,
-  MKColor,
-} = MK;
 import { connect } from 'react-redux';
-
 import News from './News';
 
 const styles = StyleSheet.create({
@@ -29,18 +21,9 @@ const styles = StyleSheet.create({
 });
 
 var refreshing = false;
-var serverHost = 'https://borktor.57bytes.com/'
-var timeStamp = 0
-const uniqueId = require('react-native-device-info').getUniqueID();
-function _onRefresh(init, initLikes) {
+var serverHost = __DEV__ ? 'http://10.0.2.2:3000' : 'https://borktor.57bytes.com/'
+function _onRefresh(init, initCat) {
   refreshing = true;
-  fetch(serverHost + '/likes.json?uid='+ uniqueId)
-    .then((response) => response.json())
-    .then((likes) => {
-      initLikes(likes)
-    })
-    .catch((error) => { });
-
   fetch(serverHost + '/news.json')
     .then((response) => response.json())
     .then((news) => {
@@ -53,35 +36,19 @@ function _onRefresh(init, initLikes) {
   });
 }
 
-const ColoredFlatButton = MKButton.coloredFlatButton()
-  .withText('BUTTON')
-  .build();
-
-const PlainFab = MKButton.coloredFab()
-  .withStyle({borderColor:'white'})
-  .build();
-
-const MainScreen = ({news, initLikes, like, dislike, myActions, createNews, loaded, init}) => {
+const PromotionsScreen = ({selectedCatId, initCat, news, loaded, init}) => {
   if (!loaded.status) {
     refreshing = true
-    _onRefresh(init, initLikes)
+    _onRefresh(init, initCat)
   }
 
   var allNews = []
-  var _like = like
-  var _dislike = dislike
   var keys = Object.keys(news);
   var values = keys.map(function(v) { return news[v]; });
-  values.sort((a,b) => {
-    if (a.like===b.like) return a.dislike-b.dislike
-    return b.like-a.like
-  })
 
   for(var index in values) {
-    var date = new Date(values[index].valid_till)
-    var now = new Date()
-    if (date - now > 0)
-      allNews.push(<News key={values[index].id} myActions={myActions} data={values[index]} dislike={_dislike} like={_like} />)
+    if (values[index].category_id === selectedCatId)
+      allNews.push(<News key={values[index].id} data={values[index]} />)
   }
   allNews.push(<View key={0} style={{height:100}}></View>)
   return (
@@ -90,11 +57,10 @@ const MainScreen = ({news, initLikes, like, dislike, myActions, createNews, load
     refreshControl={
           <RefreshControl
             refreshing={refreshing}
-            onRefresh={()=>{_onRefresh(init, initLikes)}}
+            onRefresh={()=>{_onRefresh(init, initCat)}}
           />
-        }
-    >
-    {allNews}
+        }>
+      {allNews}
     </ScrollView>
     </View>
   )
@@ -105,30 +71,24 @@ var header = <View style={{marginTop:30,flexDirection:'row',justifyContent:'cent
   <Text style={{fontFamily:'Saysettha ot',fontSize:20,color:'#4b5056',fontWeight:"500",padding:5}}> ບອກຕໍ່ </Text>
 </View>
 
-MainScreen.navigationOptions = {
-  title: 'Promotions List'
-};
+PromotionsScreen.navigationOptions =
+  ({ navigation }) => ({
+    title: `${navigation.state.params.name}`,
+  });
 
-MainScreen.propTypes = {
+PromotionsScreen.propTypes = {
   news: PropTypes.object.isRequired,
-  like: PropTypes.func.isRequired,
-  dislike: PropTypes.func.isRequired,
-  createNews: PropTypes.func.isRequired,
-  myActions: PropTypes.object.isRequired,
   loaded: PropTypes.object.isRequired,
+  selectedCatId: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => ({
   news: state.news.list,
+  selectedCatId: state.news.selectedCatId,
   loaded: state.news.loaded,
-  myActions: state.news.myActions,
 });
 const mapDispatchToProps = dispatch => ({
-  like: (id) => dispatch({ type: 'like', value:id }),
-  dislike: (id) => dispatch({ type: 'dislike', value:id }),
-  createNews: (id) => dispatch({ type: 'createNews' }),
   init: (news) => dispatch({ type: 'init', value:news }),
-  initLikes: (likes) => dispatch({ type: 'initLikes', value:likes }),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(PromotionsScreen);

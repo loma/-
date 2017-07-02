@@ -8,16 +8,9 @@ import {
   Text,
   RefreshControl,
   TouchableOpacity,
-  ActivityIndicator,
   Platform
 } from 'react-native';
-const MK = require('react-native-material-kit');
-const {
-  MKButton,
-  MKColor,
-} = MK;
 import { connect } from 'react-redux';
-
 import News from './News';
 
 const styles = StyleSheet.create({
@@ -30,17 +23,16 @@ const styles = StyleSheet.create({
 });
 
 var refreshing = false;
-var serverHost = 'https://borktor.57bytes.com/'
-var timeStamp = 0
+var serverHost = __DEV__ ? 'http://10.0.2.2:3000' : 'https://borktor.57bytes.com/'
 const uniqueId = require('react-native-device-info').getUniqueID();
-function _onRefresh(init, initLikes) {
-  refreshing = true;
-  fetch(serverHost + '/likes.json?uid='+ uniqueId)
+function _onRefresh(init, initCategories) {
+  fetch(serverHost + '/categories.json')
     .then((response) => response.json())
-    .then((likes) => {
-      initLikes(likes)
+    .then((categories) => {
+      refreshing = false;
+      initCategories(categories)
     })
-    .catch((error) => { });
+    .catch((error) => {});
 
   fetch(serverHost + '/news.json')
     .then((response) => response.json())
@@ -54,61 +46,36 @@ function _onRefresh(init, initLikes) {
   });
 }
 
-const ColoredFlatButton = MKButton.coloredFlatButton()
-  .withText('BUTTON')
-  .build();
-
-const PlainFab = MKButton.coloredFab()
-  .withStyle({borderColor:'white'})
-  .build();
-
-const MainScreen = ({news, promotions, initLikes, like, dislike, myActions, createNews, loaded, init}) => {
+const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
   if (!loaded.status) {
     refreshing = true
-    _onRefresh(init, initLikes)
+    _onRefresh(init, initCategories)
   }
 
-  var allNews = []
-  var _like = like
-  var _dislike = dislike
-  var keys = Object.keys(news);
-  var values = keys.map(function(v) { return news[v]; });
-  values.sort((a,b) => {
-    if (a.like===b.like) return a.dislike-b.dislike
-    return b.like-a.like
-  })
+  var all = []
+  for(var index in categories)
+    all.push(
+      <TouchableOpacity key={index} onPress={promotions.bind(this, categories[index].id, categories[index].name)}>
+        <View style={{justifyContent:'center',alignItems:'center'}}>
+          <Image elevation={5} style={{backgroundColor:'white',width:100,height:100}} source={{uri:categories[index].image}} />
+          <Text style={{marginTop: 5,fontSize:18}}>{categories[index].name}</Text>
+        </View>
+      </TouchableOpacity>
+    )
 
-  for(var index in values) {
-    var date = new Date(values[index].valid_till)
-    var now = new Date()
-    if (date - now > 0)
-      allNews.push(<News key={values[index].id} myActions={myActions} data={values[index]} dislike={_dislike} like={_like} />)
-  }
-  allNews.push(<View key={0} style={{height:100}}></View>)
   return (
     <View style={{flex:1}}>
     <ScrollView
     refreshControl={
           <RefreshControl
             refreshing={refreshing}
-            onRefresh={()=>{_onRefresh(init, initLikes)}}
+            onRefresh={()=>{_onRefresh(init, initCategories)}}
           />
         }
     >
 
     <View style={{marginTop:30,marginLeft:30,marginRight:30,flexDirection:'row',justifyContent:'space-around'}}>
-      <TouchableOpacity onPress={()=>{promotions()}}>
-        <View style={{justifyContent:'center',alignItems:'center'}}>
-          <Image style={{width:100,height:100}} source={require('../img/f_b.png')} />
-          <Text style={{marginTop: 15}}>Food and Beverage</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={()=>{promotions()}}>
-        <View style={{justifyContent:'center',alignItems:'center'}}>
-          <Image style={{width:100,height:100}} source={require('../img/fashion.png')} />
-          <Text style={{marginTop: 15}}>Fashion</Text>
-        </View>
-      </TouchableOpacity>
+      {all}
     </View>
 
     </ScrollView>
@@ -129,27 +96,19 @@ MainScreen.navigationOptions = {
 };
 
 MainScreen.propTypes = {
-  news: PropTypes.object.isRequired,
-  like: PropTypes.func.isRequired,
-  dislike: PropTypes.func.isRequired,
-  createNews: PropTypes.func.isRequired,
+  categories: PropTypes.array.isRequired,
   promotions: PropTypes.func.isRequired,
-  myActions: PropTypes.object.isRequired,
   loaded: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-  news: state.news.list,
+  categories: state.news.categories,
   loaded: state.news.loaded,
-  myActions: state.news.myActions,
 });
 const mapDispatchToProps = dispatch => ({
-  like: (id) => dispatch({ type: 'like', value:id }),
-  dislike: (id) => dispatch({ type: 'dislike', value:id }),
-  createNews: (id) => dispatch({ type: 'createNews' }),
   init: (news) => dispatch({ type: 'init', value:news }),
-  initLikes: (likes) => dispatch({ type: 'initLikes', value:likes }),
-  promotions: () => dispatch({ type: 'promotions' }),
+  initCategories: (cats) => dispatch({ type: 'initCategories', value:cats }),
+  promotions: (id, n) => dispatch({ type: 'promotions', value:id, name:n }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);
