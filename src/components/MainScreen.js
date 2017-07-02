@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 });
 
 var refreshing = false;
-var serverHost = __DEV__ ? 'http://10.0.2.2:3000' : 'https://borktor.57bytes.com/'
+var serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
 const uniqueId = require('react-native-device-info').getUniqueID();
 function _onRefresh(init, initCategories) {
   fetch(serverHost + '/categories.json')
@@ -58,7 +58,7 @@ const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
       <TouchableOpacity key={index} onPress={promotions.bind(this, categories[index].id, categories[index].name)}>
         <View style={{justifyContent:'center',alignItems:'center'}}>
           <Image elevation={5} style={{backgroundColor:'white',width:100,height:100}} source={{uri:categories[index].image}} />
-          <Text style={{marginTop: 5,fontSize:18}}>{categories[index].name}</Text>
+          <Text style={{marginTop: 12,fontSize:18,lineHeight:30,fontFamily:'Saysettha OT'}}>{categories[index].name}</Text>
         </View>
       </TouchableOpacity>
     )

@@ -7,6 +7,7 @@ import {
   ScrollView,
   Text,
   RefreshControl,
+  Platform
 } from 'react-native';
 import { connect } from 'react-redux';
 import News from './News';
@@ -21,7 +22,7 @@ const styles = StyleSheet.create({
 });
 
 var refreshing = false;
-var serverHost = __DEV__ ? 'http://10.0.2.2:3000' : 'https://borktor.57bytes.com/'
+var serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
 function _onRefresh(init, initCat) {
   refreshing = true;
   fetch(serverHost + '/news.json')
@@ -66,14 +67,9 @@ const PromotionsScreen = ({selectedCatId, initCat, news, loaded, init}) => {
   )
 }
 
-var header = <View style={{marginTop:30,flexDirection:'row',justifyContent:'center',alignItems:'center',backgroundColor:'white'}} elevation={5}>
-  <Image style={{width:40,height:40}} source={require('../img/logo.png')}/>
-  <Text style={{fontFamily:'Saysettha ot',fontSize:20,color:'#4b5056',fontWeight:"500",padding:5}}> ບອກຕໍ່ </Text>
-</View>
-
 PromotionsScreen.navigationOptions =
   ({ navigation }) => ({
-    title: `${navigation.state.params.name}`,
+    title: <Text style={{lineHeight:30,fontSize:18,fontFamily:'Saysettha OT'}}>{navigation.state.params.name}</Text>,
   });
 
 PromotionsScreen.propTypes = {

@@ -8,12 +8,7 @@ import {
   Linking
 } from 'react-native';
 var Lightbox = require('react-native-lightbox');
-const News = ({ data, modalVisible, setModalVisible, setImage, initialPage, images }) => {
-  var imgs = []
-  for (var i in images) {
-    imgs.push({source: {uri:images[i]}})
-  }
-
+const News = ({ data }) => {
 return (
   <View style={{flex:1,flexDirection:'column',borderBottomWidth:5,borderColor:'#777',backgroundColor:'white'}} elevation={5}>
 
@@ -64,7 +59,7 @@ return (
           <Image source={require('../img/fb.png')} style={{margin:2, width:20,height:20}} />
         </TouchableOpacity>
         <Image source={require('../img/discount.png')} style={{margin:2, width:20,height:20}} />
-        <Text style={{fontSize:12}}>{data.price}</Text>
+        <Text style={{fontSize:12,lineHeight:20,fontFamily:'Saysettha ot'}}>{data.price}</Text>
       </View>
     </View>
   </View>
@@ -73,11 +68,6 @@ return (
 
 News.propTypes = {
   data: PropTypes.object.isRequired,
-  modalVisible: PropTypes.bool.isRequired,
-  setModalVisible: PropTypes.func.isRequired,
-  setImage: PropTypes.func.isRequired,
-  initialPage: PropTypes.number.isRequired,
-  images: PropTypes.array.isRequired,
 };
 
 export default News
