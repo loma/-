@@ -9,6 +9,7 @@ import {
   Linking,
   StyleSheet
 } from 'react-native';
+const CachedImage = require('react-native-cached-image');
 
 const styles = StyleSheet.create({
   container: {
@@ -47,7 +48,7 @@ const News = ({ data }) => {
     if (image !== '')
     images.push(
       <View key={index++} style={styles.innerContainer}>
-        <Image resizeMode="cover" source={{uri:image}} style={styles.image} />
+        <CachedImage resizeMode="cover" source={{uri:image}} style={styles.image} />
       </View>
     )
 return (
@@ -58,7 +59,7 @@ return (
 
     <View style={{flexDirection:'row',alignItems:'center' }}>
       <TouchableOpacity onPress={()=>{Linking.openURL(data.fb_url).catch(err => console.error('An error occurred', err));}}>
-        <Image source={require('../img/fb.png')} style={styles.fbIcon} />
+        <CachedImage source={require('../img/fb.png')} style={styles.fbIcon} />
       </TouchableOpacity>
       <Text style={styles.text}>{data.title}</Text>
     </View>

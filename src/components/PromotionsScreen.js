@@ -58,6 +58,8 @@ const PromotionsScreen = ({selectedCatId, initCat, news, loaded, init}) => {
         data={allNews}
         renderItem={({item}) => <News key={item.id} data={item} /> }
         keyExtractor = {(item, index) => item.id}
+        refreshing={refreshing}
+        onRefresh={()=>{_onRefresh(init, initCat)}}
       />
     </View>
   )
