@@ -53,15 +53,26 @@ const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
   }
 
   var all = []
-  for(var index in categories)
-    all.push(
-      <TouchableOpacity key={index} onPress={promotions.bind(this, categories[index].id, categories[index].name)}>
+  for (var index=0; index<categories.length; index+=3) {
+
+    var temp = []
+    for (var innerIndex=index; innerIndex<Math.min(index+3, categories.length); innerIndex++) {
+      temp.push(
+      <TouchableOpacity key={innerIndex} onPress={promotions.bind(this, categories[innerIndex].id, categories[innerIndex].name)}>
         <View style={{justifyContent:'center',alignItems:'center'}}>
-          <Image elevation={5} style={{backgroundColor:'white',width:100,height:100}} source={{uri:categories[index].image}} />
-          <Text style={{marginTop: 12,fontSize:18,lineHeight:30,fontFamily:'Saysettha OT'}}>{categories[index].name}</Text>
+          <Image elevation={5} style={{backgroundColor:'white',width:100,height:100}} source={{uri:categories[innerIndex].image}} />
+          <Text style={{marginTop: 12,fontSize:18,lineHeight:30,fontFamily:'Saysettha OT'}}>{categories[innerIndex].name}</Text>
         </View>
       </TouchableOpacity>
+      )
+    }
+    all.push(
+    <View key={index} style={{marginTop:5,marginLeft:0,marginRight:0,flexDirection:'row',justifyContent:'space-between'}}>
+      {temp}
+    </View>
     )
+
+  }
 
   return (
     <View style={{flex:1}}>
@@ -74,7 +85,7 @@ const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
         }
     >
 
-    <View style={{marginTop:30,marginLeft:30,marginRight:30,flexDirection:'row',justifyContent:'space-around'}}>
+    <View style={{marginTop:30,marginLeft:30,marginRight:30,flexDirection:'column',justifyContent:'space-around'}}>
       {all}
     </View>
 

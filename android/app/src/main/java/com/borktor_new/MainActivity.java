@@ -1,4 +1,4 @@
-package com.borktor;
+package com.borktor_new;
 
 import com.facebook.react.ReactActivity;
 

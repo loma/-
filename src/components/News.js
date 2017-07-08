@@ -4,64 +4,65 @@ import {
   View,
   Image,
   Text,
+  ScrollView,
   TouchableOpacity,
-  Linking
+  Linking,
+  StyleSheet
 } from 'react-native';
-var Lightbox = require('react-native-lightbox');
+
+const styles = StyleSheet.create({
+  container: {
+    flex:1,
+    flexDirection:'column',
+    borderBottomWidth:5,
+    borderColor:'#777',
+    backgroundColor:'white'
+  },
+  innerContainer: {
+    flex:0.25,
+    width:150,
+    borderWidth:1,
+    borderColor:'white'
+  },
+  image: {
+    flex:1,
+    height:150
+  },
+  text: {
+    fontSize:12,
+    lineHeight:20,
+    fontFamily:'Saysettha ot'
+  },
+  fbIcon: {
+    margin:2,
+    width:30,
+    height:30
+  }
+});
+
 const News = ({ data }) => {
+  images = [];
+  index = 0;
+  for (var image of data.images)
+    if (image !== '')
+    images.push(
+      <View key={index++} style={styles.innerContainer}>
+        <Image resizeMode="cover" source={{uri:image}} style={styles.image} />
+      </View>
+    )
 return (
-  <View style={{flex:1,flexDirection:'column',borderBottomWidth:5,borderColor:'#777',backgroundColor:'white'}} elevation={5}>
+  <View style={styles.container} elevation={5}>
+    <ScrollView horizontal={true}>
+      {images}
+    </ScrollView>
 
-    <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-      <View style={{flex:0.25,borderWidth:1,borderColor:'white'}}>
-        <Lightbox>
-            <Image
-            resizeMode="contain"
-            source={{uri:data.images[0]}}
-            style={{height:100,flex:1, width: null}} />
-            </Lightbox>
-      </View>
-      <View style={{flex:0.25,borderWidth:1,borderColor:'white'}}>
-        <Lightbox>
-          <Image
-          resizeMode="contain"
-          source={{uri:data.images[1]}}
-          style={{height:100,flex:1, width: null}} />
-        </Lightbox>
-      </View>
-      <View style={{flex:0.25,borderWidth:1,borderColor:'white'}}>
-        <Lightbox>
-          <Image
-          resizeMode="contain"
-          source={{uri:data.images[2]}}
-          style={{height:100,flex:1, width: null}} />
-        </Lightbox>
-      </View>
-      <View style={{flex:0.25,borderWidth:1,borderColor:'white'}}>
-        <Lightbox>
-          <Image
-          resizeMode="contain"
-          source={{uri:data.images[3]}}
-          style={{height:100,flex:1, width: null}} />
-        </Lightbox>
-      </View>
+    <View style={{flexDirection:'row',alignItems:'center' }}>
+      <TouchableOpacity onPress={()=>{Linking.openURL(data.fb_url).catch(err => console.error('An error occurred', err));}}>
+        <Image source={require('../img/fb.png')} style={styles.fbIcon} />
+      </TouchableOpacity>
+      <Text style={styles.text}>{data.title}</Text>
     </View>
 
-    <View style={{flex:1,flexDirection:'column',marginRight:5,marginLeft:5}}>
-
-      <Text numberOfLines={5} ellipsizeMode={'tail'}
-        style={{fontSize:12,fontFamily: 'Saysettha OT',marginTop:5,marginLeft:5,padding:5}}>
-        {data.title}
-      </Text>
-
-      <View style={{flexDirection:'row',alignItems:'center' }}>
-        <TouchableOpacity onPress={()=>{Linking.openURL(data.fb_url).catch(err => console.error('An error occurred', err));}}>
-          <Image source={require('../img/fb.png')} style={{margin:2, width:20,height:20}} />
-        </TouchableOpacity>
-        <Image source={require('../img/discount.png')} style={{margin:2, width:20,height:20}} />
-        <Text style={{fontSize:12,lineHeight:20,fontFamily:'Saysettha ot'}}>{data.price}</Text>
-      </View>
-    </View>
   </View>
 )
 }

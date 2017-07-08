@@ -7,6 +7,7 @@ import {
   ScrollView,
   Text,
   RefreshControl,
+  FlatList,
   Platform
 } from 'react-native';
 import { connect } from 'react-redux';
@@ -49,20 +50,15 @@ const PromotionsScreen = ({selectedCatId, initCat, news, loaded, init}) => {
 
   for(var index in values) {
     if (values[index].category_id === selectedCatId)
-      allNews.push(<News key={values[index].id} data={values[index]} />)
+      allNews.push(values[index])
   }
-  allNews.push(<View key={0} style={{height:100}}></View>)
   return (
     <View style={{flex:1}}>
-    <ScrollView
-    refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={()=>{_onRefresh(init, initCat)}}
-          />
-        }>
-      {allNews}
-    </ScrollView>
+      <FlatList
+        data={allNews}
+        renderItem={({item}) => <News key={item.id} data={item} /> }
+        keyExtractor = {(item, index) => item.id}
+      />
     </View>
   )
 }
