@@ -10,6 +10,12 @@ import {
   TouchableOpacity,
   Platform
 } from 'react-native';
+import {
+  AdMobBanner,
+  AdMobInterstitial,
+  PublisherBanner,
+  AdMobRewarded
+} from 'react-native-admob'
 import { connect } from 'react-redux';
 import News from './News';
 
@@ -90,6 +96,10 @@ const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
     </View>
 
     </ScrollView>
+      <AdMobBanner
+  bannerSize="fullBanner"
+  adUnitID="ca-app-pub-5604817964718511/5290589982"
+  testDeviceID="EMULATOR" />
     </View>
   )
 }

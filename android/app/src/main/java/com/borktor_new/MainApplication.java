@@ -3,6 +3,7 @@ package com.borktor_new;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.sbugert.rnadmob.RNAdMobPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
@@ -26,6 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNAdMobPackage(),
             new RNFetchBlobPackage(),
             new ReactMaterialKitPackage(),
             new RNDeviceInfo()

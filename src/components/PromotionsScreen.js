@@ -10,6 +10,13 @@ import {
   FlatList,
   Platform
 } from 'react-native';
+import {
+  AdMobBanner,
+  AdMobInterstitial,
+  PublisherBanner,
+  AdMobRewarded
+} from 'react-native-admob'
+
 import { connect } from 'react-redux';
 import News from './News';
 
@@ -61,6 +68,11 @@ const PromotionsScreen = ({selectedCatId, initCat, news, loaded, init}) => {
         refreshing={refreshing}
         onRefresh={()=>{_onRefresh(init, initCat)}}
       />
+      <AdMobBanner
+  bannerSize="fullBanner"
+  adUnitID="ca-app-pub-5604817964718511/5290589982"
+  testDeviceID="EMULATOR"
+  didFailToReceiveAdWithError={this.bannerError} />
     </View>
   )
 }
