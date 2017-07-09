@@ -7,6 +7,8 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
+@import Firebase;
+
 #import "AppDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
@@ -16,6 +18,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+
+  // Use Firebase library to configure APIs.
+  [FIRApp configure];
+  // Initialize the Google Mobile Ads SDK.
+  [GADMobileAds configureWithApplicationID:@"ca-app-pub-5604817964718511~2337123587"];
+
   NSURL *jsCodeLocation;
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
@@ -31,6 +39,7 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+
   return YES;
 }
 

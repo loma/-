@@ -68,11 +68,13 @@ const PromotionsScreen = ({selectedCatId, initCat, news, loaded, init}) => {
         refreshing={refreshing}
         onRefresh={()=>{_onRefresh(init, initCat)}}
       />
-      <AdMobBanner
-        bannerSize="banner"
-        style={{justifyContent:'center',alignItems:'center'}}
-        adUnitID="ca-app-pub-5604817964718511/5290589982"
-        testDeviceID="EMULATOR" />
+      <View style={{flexDirection:'row',justifyContent:'center'}}>
+        <AdMobBanner
+          style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
+          bannerSize="banner"
+          adUnitID="ca-app-pub-5604817964718511/5290589982"
+          testDeviceID="EMULATOR" />
+      </View>
     </View>
   )
 }

@@ -96,11 +96,13 @@ const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
     </View>
 
     </ScrollView>
-    <AdMobBanner
-      style={{justifyContent:'center',alignItems:'center'}}
-      bannerSize="banner"
-      adUnitID="ca-app-pub-5604817964718511/5290589982"
-      testDeviceID="EMULATOR" />
+    <View style={{flexDirection:'row',justifyContent:'center'}}>
+      <AdMobBanner
+        style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
+        bannerSize="banner"
+        adUnitID="ca-app-pub-5604817964718511/5290589982"
+        testDeviceID="EMULATOR" />
+      </View>
     </View>
   )
 }
@@ -109,7 +111,7 @@ var header = <View style={{
   marginTop:(Platform.OS === 'ios') ? 20 : 0,
   flexDirection:'row',justifyContent:'center',alignItems:'center',backgroundColor:'white'}} elevation={5}>
   <Image style={{width:40,height:40}} source={require('../img/logo.png')}/>
-  <Text style={{fontFamily:'Saysettha ot',fontSize:20,color:'#4b5056',fontWeight:"500",padding:5}}> ບອກຕໍ່ </Text>
+  <Text style={{fontFamily:'Saysettha OT',fontSize:20,color:'#4b5056',fontWeight:"500",padding:5}}> ບອກຕໍ່ </Text>
 </View>
 
 MainScreen.navigationOptions = {
