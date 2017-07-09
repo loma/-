@@ -69,10 +69,10 @@ const PromotionsScreen = ({selectedCatId, initCat, news, loaded, init}) => {
         onRefresh={()=>{_onRefresh(init, initCat)}}
       />
       <AdMobBanner
-  bannerSize="fullBanner"
-  adUnitID="ca-app-pub-5604817964718511/5290589982"
-  testDeviceID="EMULATOR"
-  didFailToReceiveAdWithError={this.bannerError} />
+        bannerSize="banner"
+        style={{justifyContent:'center',alignItems:'center'}}
+        adUnitID="ca-app-pub-5604817964718511/5290589982"
+        testDeviceID="EMULATOR" />
     </View>
   )
 }

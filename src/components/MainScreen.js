@@ -96,10 +96,11 @@ const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
     </View>
 
     </ScrollView>
-      <AdMobBanner
-  bannerSize="fullBanner"
-  adUnitID="ca-app-pub-5604817964718511/5290589982"
-  testDeviceID="EMULATOR" />
+    <AdMobBanner
+      style={{justifyContent:'center',alignItems:'center'}}
+      bannerSize="banner"
+      adUnitID="ca-app-pub-5604817964718511/5290589982"
+      testDeviceID="EMULATOR" />
     </View>
   )
 }
