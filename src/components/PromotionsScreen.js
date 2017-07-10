@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {
+  Component
+} from 'react';
 import PropTypes from 'prop-types';
 import {
   StyleSheet,
@@ -45,39 +47,43 @@ function _onRefresh(init, initCat) {
   });
 }
 
-const PromotionsScreen = ({selectedCatId, initCat, news, loaded, init}) => {
-  if (!loaded.status) {
-    refreshing = true
-    _onRefresh(init, initCat)
-  }
+//const PromotionsScreen = ({selectedCatId, initCat, news, loaded, init}) => {
+class PromotionsScreen extends Component {
+  render() {
+    if (!this.props.loaded.status) {
+      refreshing = true
+      _onRefresh(this.props.init, this.props.initCat)
+    }
 
-  var allNews = []
-  var keys = Object.keys(news);
-  var values = keys.map(function(v) { return news[v]; });
-  values.sort((a,b) => {return b.id - a.id})
+    var allNews = []
+    const news = this.props.news
+    var keys = Object.keys(news);
+    var values = keys.map(function(v) { return news[v]; });
+    values.sort((a,b) => {return b.id - a.id})
 
-  for(var index in values) {
-    if (values[index].category_id === selectedCatId && values[index].images.length > 0)
-      allNews.push(values[index])
-  }
-  return (
-    <View style={{flex:1}}>
-      <FlatList
-        data={allNews}
-        renderItem={({item}) => <News key={item.id} data={item} /> }
-        keyExtractor = {(item, index) => item.id}
-        refreshing={refreshing}
-        onRefresh={()=>{_onRefresh(init, initCat)}}
-      />
-      <View style={{flexDirection:'row',justifyContent:'center'}}>
-        <AdMobBanner
-          style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
-          bannerSize="banner"
-          adUnitID="ca-app-pub-5604817964718511/5290589982"
-          testDeviceID="EMULATOR" />
+    for(var index in values) {
+      if (values[index].category_id === this.props.selectedCatId && values[index].images.length > 0)
+        allNews.push(values[index])
+    }
+    return (
+      <View style={{flex:1}}>
+        <FlatList
+          data={allNews}
+          renderItem={({item}) => <News key={item.id} data={item} /> }
+          keyExtractor = {(item, index) => item.id}
+          refreshing={refreshing}
+          onRefresh={()=>{_onRefresh(this.props.init, this.props.initCat)}}
+        />
+        <View style={{flexDirection:'row',justifyContent:'center'}}>
+          <AdMobBanner
+            style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
+            bannerSize="banner"
+            adUnitID="ca-app-pub-5604817964718511/5290589982"
+            testDeviceID="EMULATOR" />
+        </View>
       </View>
-    </View>
-  )
+    )
+  }
 }
 
 PromotionsScreen.navigationOptions =

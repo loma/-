@@ -87,7 +87,7 @@ const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
             alignItems:'center',
             justifyContent:'center',
             backgroundColor: 'rgba(255,255,255,1)',
-            color: '#777',textAlign:'center',position:'absolute',bottom:0,
+            color: '#222',textAlign:'center',position:'absolute',bottom:0,
             fontSize:16,lineHeight:25,fontFamily:'Saysettha OT'}}>
               {categories[innerIndex].name}
           </Text>
@@ -132,8 +132,7 @@ const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
 var header = <View style={{
   marginTop:(Platform.OS === 'ios') ? 20 : 0,
   flexDirection:'row',justifyContent:'center',alignItems:'center',backgroundColor:'white'}} elevation={5}>
-  <Image style={{width:40,height:40}} source={require('../img/logo.png')}/>
-  <Text style={{fontFamily:'Saysettha OT',fontSize:20,color:'#4b5056',fontWeight:"500",padding:5}}> ບອກຕໍ່ </Text>
+  <Image style={{width:90,height:40,margin:(Platform.OS === 'ios') ? 2 : 5,}} source={require('../img/logo_2.png')}/>
 </View>
 
 MainScreen.navigationOptions = {

@@ -246,6 +246,34 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNFIRMessaging;
 		};
+		FA2A97521F13CBD700438C49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FA2A974B1F13CBD600438C49 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 852C7CBAF4469DD28DDF6B092968923E;
+			remoteInfo = GoogleToolboxForMac;
+		};
+		FA2A97541F13CBD700438C49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FA2A974B1F13CBD600438C49 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F4E87769F869E0BDDE9BB40E11C4766F;
+			remoteInfo = "Pods-BorkTor";
+		};
+		FA2A97561F13CBD700438C49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FA2A974B1F13CBD600438C49 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D4EEE16570EBF0331D45485062524DDD;
+			remoteInfo = "Pods-BorkTorTests";
+		};
+		FA2A97581F13CBD700438C49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FA2A974B1F13CBD600438C49 /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 38AA7F1F115863F270571506CD707A17;
+			remoteInfo = Protobuf;
+		};
 		FA3887BB1EFD21FC00819601 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
@@ -309,6 +337,7 @@
 		ECE1771CF0A540F894E4DDAD /* RNFIRMessaging.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFIRMessaging.xcodeproj; path = "../node_modules/react-native-fcm/ios/RNFIRMessaging.xcodeproj"; sourceTree = "<group>"; };
 		F98D5A67C6C3444382D35C59 /* libRNFIRMessaging.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFIRMessaging.a; sourceTree = "<group>"; };
 		FA2A97491F12A92700438C49 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "BorkTor/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		FA2A974B1F13CBD600438C49 /* Pods.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Pods.xcodeproj; path = Pods/Pods.xcodeproj; sourceTree = "<group>"; };
 		FAE424601F00F1DC00396A63 /* saysettha_ot.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = saysettha_ot.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -499,6 +528,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				FA2A974B1F13CBD600438C49 /* Pods.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -584,6 +614,17 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		FA2A974C1F13CBD600438C49 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FA2A97531F13CBD700438C49 /* libGoogleToolboxForMac.a */,
+				FA2A97551F13CBD700438C49 /* libPods-BorkTor.a */,
+				FA2A97571F13CBD700438C49 /* libPods-BorkTorTests.a */,
+				FA2A97591F13CBD700438C49 /* libProtobuf.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		FAE4248A1F01119000396A63 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -650,6 +691,9 @@
 						CreatedOnToolsVersion = 6.2;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
+					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = HVMV59E4YU;
+					};
 				};
 			};
 			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "BorkTor" */;
@@ -664,6 +708,10 @@
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = FA2A974C1F13CBD600438C49 /* Products */;
+					ProjectRef = FA2A974B1F13CBD600438C49 /* Pods.xcodeproj */;
+				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
@@ -941,6 +989,34 @@
 			remoteRef = FA2A97031F126B9B00438C49 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		FA2A97531F13CBD700438C49 /* libGoogleToolboxForMac.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libGoogleToolboxForMac.a;
+			remoteRef = FA2A97521F13CBD700438C49 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FA2A97551F13CBD700438C49 /* libPods-BorkTor.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libPods-BorkTor.a";
+			remoteRef = FA2A97541F13CBD700438C49 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FA2A97571F13CBD700438C49 /* libPods-BorkTorTests.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libPods-BorkTorTests.a";
+			remoteRef = FA2A97561F13CBD700438C49 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FA2A97591F13CBD700438C49 /* libProtobuf.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libProtobuf.a;
+			remoteRef = FA2A97581F13CBD700438C49 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		FA3887BC1EFD21FC00819601 /* libthird-party.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1211,6 +1287,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = HVMV59E4YU;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
@@ -1239,6 +1316,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = HVMV59E4YU;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",

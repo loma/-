@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   },
   image: {
     flex:1,
-    height:150
+    height:150,
   },
   text: {
     fontSize:12,
