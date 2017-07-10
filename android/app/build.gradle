@@ -97,8 +97,8 @@ android {
         applicationId "com.borktor_new"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 6
-        versionName "3.3"
+        versionCode 7
+        versionName "3.4"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }

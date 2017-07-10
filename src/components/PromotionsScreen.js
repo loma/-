@@ -54,9 +54,10 @@ const PromotionsScreen = ({selectedCatId, initCat, news, loaded, init}) => {
   var allNews = []
   var keys = Object.keys(news);
   var values = keys.map(function(v) { return news[v]; });
+  values.sort((a,b) => {return b.id - a.id})
 
   for(var index in values) {
-    if (values[index].category_id === selectedCatId)
+    if (values[index].category_id === selectedCatId && values[index].images.length > 0)
       allNews.push(values[index])
   }
   return (

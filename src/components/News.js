@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     fontFamily:'Saysettha ot'
   },
   fbIcon: {
-    margin:2,
+    margin:5,
     width:30,
     height:30
   }
@@ -57,11 +57,12 @@ return (
       {images}
     </ScrollView>
 
+    <Text style={[styles.text, {marginLeft: 10,marginTop:5,marginLeft:10}]} numberOfLines={5}>{data.title}</Text>
     <View style={{flexDirection:'row',alignItems:'center' }}>
       <TouchableOpacity onPress={()=>{Linking.openURL(data.fb_url).catch(err => console.error('An error occurred', err));}}>
         <CachedImage source={require('../img/fb.png')} style={styles.fbIcon} />
       </TouchableOpacity>
-      <Text style={styles.text}>{data.title}</Text>
+      <Text style={styles.text}>ກົດເພື່ອເບິ່ງລາຍລະອຽດໃນເຟສບຸກ</Text>
     </View>
 
   </View>

@@ -8,7 +8,8 @@ import {
   Text,
   RefreshControl,
   TouchableOpacity,
-  Platform
+  Platform,
+  Dimensions
 } from 'react-native';
 import {
   AdMobBanner,
@@ -64,16 +65,37 @@ const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
     var temp = []
     for (var innerIndex=index; innerIndex<Math.min(index+3, categories.length); innerIndex++) {
       temp.push(
-      <TouchableOpacity key={innerIndex} onPress={promotions.bind(this, categories[innerIndex].id, categories[innerIndex].name)}>
-        <View style={{justifyContent:'center',alignItems:'center'}}>
-          <Image elevation={5} style={{backgroundColor:'white',width:100,height:100}} source={{uri:categories[innerIndex].image}} />
-          <Text style={{marginTop: 12,fontSize:18,lineHeight:30,fontFamily:'Saysettha OT'}}>{categories[innerIndex].name}</Text>
-        </View>
+        <View key={innerIndex} style={{justifyContent:'center',alignItems:'center'}}>
+      <TouchableOpacity onPress={promotions.bind(this, categories[innerIndex].id, categories[innerIndex].name)}>
+          <Image
+          resizeMode="cover"
+          elevation={5}
+          style={{backgroundColor:'white',
+            height:Dimensions.get('window').width/3,
+            width:Dimensions.get('window').width/3,
+            borderWidth:1,
+            borderColor: '#fff'
+          }}
+            source={{uri:categories[innerIndex].image}} >
+          </Image>
       </TouchableOpacity>
+          <Text style={{
+            borderLeftWidth:10,
+            borderRightWidth:10,
+            borderColor: '#fff',
+            width:Dimensions.get('window').width/3,
+            alignItems:'center',
+            justifyContent:'center',
+            backgroundColor: 'rgba(255,255,255,1)',
+            color: '#777',textAlign:'center',position:'absolute',bottom:0,
+            fontSize:16,lineHeight:25,fontFamily:'Saysettha OT'}}>
+              {categories[innerIndex].name}
+          </Text>
+        </View>
       )
     }
     all.push(
-    <View key={index} style={{marginTop:5,marginLeft:0,marginRight:0,flexDirection:'row',justifyContent:'space-between'}}>
+    <View key={index} style={{flexDirection:'row',justifyContent:'space-between'}}>
       {temp}
     </View>
     )
@@ -91,7 +113,7 @@ const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
         }
     >
 
-    <View style={{marginTop:30,marginLeft:30,marginRight:30,flexDirection:'column',justifyContent:'space-around'}}>
+    <View style={{flexDirection:'column',justifyContent:'space-around'}}>
       {all}
     </View>
 
