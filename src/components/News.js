@@ -32,7 +32,8 @@ const styles = StyleSheet.create({
   text: {
     fontSize:12,
     lineHeight:20,
-    fontFamily:'Saysettha ot'
+    fontFamily:'Saysettha ot',
+    color:'#222'
   },
   fbIcon: {
     margin:5,
