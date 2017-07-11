@@ -79,23 +79,27 @@ const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
             source={{uri:categories[innerIndex].image}} >
           </Image>
       </TouchableOpacity>
-          <Text style={{
+          <Text
+          ellipsizeMode='tail'
+          numberOfLines={1}
+          style={{
+            paddingTop: (Platform.OS === 'ios') ? 3 : 0,
             borderLeftWidth:10,
             borderRightWidth:10,
             borderColor: '#fff',
             width:Dimensions.get('window').width/3,
             alignItems:'center',
             justifyContent:'center',
-            backgroundColor: 'rgba(255,255,255,1)',
+            backgroundColor: 'rgba(255,255,255,0.8)',
             color: '#222',textAlign:'center',position:'absolute',bottom:0,
-            fontSize:16,lineHeight:25,fontFamily:'Saysettha OT'}}>
+            fontSize:14,lineHeight:25,fontFamily:'Saysettha OT'}}>
               {categories[innerIndex].name}
           </Text>
         </View>
       )
     }
     all.push(
-    <View key={index} style={{flexDirection:'row',justifyContent:'space-between'}}>
+    <View key={index} style={{flexDirection:'row'}}>
       {temp}
     </View>
     )
@@ -130,9 +134,10 @@ const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
 }
 
 var header = <View style={{
-  marginTop:(Platform.OS === 'ios') ? 20 : 0,
+  marginTop:(Platform.OS === 'ios') ? 15 : 0,
   flexDirection:'row',justifyContent:'center',alignItems:'center',backgroundColor:'white'}} elevation={5}>
-  <Image style={{width:90,height:40,margin:(Platform.OS === 'ios') ? 2 : 5,}} source={require('../img/logo_2.png')}/>
+  <Image style={{width:40,height:40,margin:(Platform.OS === 'ios') ? 2 : 5,}} source={require('../img/logo.png')}/>
+  <Text style={{fontSize:18,color:'#222',fontWeight:'100',lineHeight:28,fontFamily:'Saysettha OT'}}>ບອກຕໍ່</Text>
 </View>
 
 MainScreen.navigationOptions = {

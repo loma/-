@@ -88,7 +88,7 @@ class PromotionsScreen extends Component {
 
 PromotionsScreen.navigationOptions =
   ({ navigation }) => ({
-    title: <Text style={{lineHeight:30,fontSize:18,fontFamily:'Saysettha OT'}}>{navigation.state.params.name}</Text>,
+    title: <Text style={{fontWeight:'100',lineHeight:28,fontSize:18,fontFamily:'Saysettha OT'}}>{navigation.state.params.name}</Text>,
   });
 
 PromotionsScreen.propTypes = {
