@@ -134,7 +134,6 @@ const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
 }
 
 var header = <View style={{
-  marginTop:(Platform.OS === 'ios') ? 15 : 0,
   flexDirection:'row',justifyContent:'center',alignItems:'center',backgroundColor:'white'}} elevation={5}>
   <Image style={{width:40,height:40,margin:(Platform.OS === 'ios') ? 2 : 5,}} source={require('../img/logo.png')}/>
   <Text style={{fontSize:18,color:'#222',fontWeight:'100',lineHeight:28,fontFamily:'Saysettha OT'}}>ບອກຕໍ່</Text>
