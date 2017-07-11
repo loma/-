@@ -338,6 +338,7 @@
 		F98D5A67C6C3444382D35C59 /* libRNFIRMessaging.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFIRMessaging.a; sourceTree = "<group>"; };
 		FA2A97491F12A92700438C49 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "BorkTor/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FA2A974B1F13CBD600438C49 /* Pods.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Pods.xcodeproj; path = Pods/Pods.xcodeproj; sourceTree = "<group>"; };
+		FA2A98621F14C07400438C49 /* BorkTor.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = BorkTor.entitlements; path = BorkTor/BorkTor.entitlements; sourceTree = "<group>"; };
 		FAE424601F00F1DC00396A63 /* saysettha_ot.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = saysettha_ot.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -458,6 +459,7 @@
 		13B07FAE1A68108700A75B9A /* BorkTor */ = {
 			isa = PBXGroup;
 			children = (
+				FA2A98621F14C07400438C49 /* BorkTor.entitlements */,
 				FA2A97491F12A92700438C49 /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -689,10 +691,16 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = 2N4CH3XSAA;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = HVMV59E4YU;
+						DevelopmentTeam = 2N4CH3XSAA;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -1214,6 +1222,7 @@
 			baseConfigurationReference = 0439570B5F34F3003C6F03DE /* Pods-BorkTorTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 2N4CH3XSAA;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1252,6 +1261,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 2N4CH3XSAA;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
@@ -1285,9 +1295,10 @@
 			baseConfigurationReference = AB9BA5090E58F55867C96518 /* Pods-BorkTor.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = BorkTor/BorkTor.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = HVMV59E4YU;
+				DEVELOPMENT_TEAM = 2N4CH3XSAA;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
@@ -1304,8 +1315,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.BorkTor;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.BorkTorNew;
 				PRODUCT_NAME = BorkTor;
+				TARGETED_DEVICE_FAMILY = 2;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1315,8 +1327,9 @@
 			baseConfigurationReference = 8D0A319F3C88C3E9046EA6AE /* Pods-BorkTor.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = BorkTor/BorkTor.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = HVMV59E4YU;
+				DEVELOPMENT_TEAM = 2N4CH3XSAA;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
@@ -1333,8 +1346,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.BorkTor;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.BorkTorNew;
 				PRODUCT_NAME = BorkTor;
+				TARGETED_DEVICE_FAMILY = 2;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
