@@ -83,13 +83,10 @@ const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
           ellipsizeMode='tail'
           numberOfLines={1}
           style={{
+            flex:1,
             paddingTop: (Platform.OS === 'ios') ? 3 : 0,
-            borderLeftWidth:10,
-            borderRightWidth:10,
             borderColor: '#fff',
             width:Dimensions.get('window').width/3,
-            alignItems:'center',
-            justifyContent:'center',
             backgroundColor: 'rgba(255,255,255,0.8)',
             color: '#222',textAlign:'center',position:'absolute',bottom:0,
             fontSize:14,lineHeight:25,fontFamily:'Saysettha OT'}}>

@@ -22,6 +22,7 @@ export const AppNavigator = StackNavigator({
   Promotions: { screen: PromotionsScreen },
 });
 
+var serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
 class AppWithNavigationState extends Component {
     shouldCloseApp(nav) {
       return nav.index === 0;
@@ -29,8 +30,14 @@ class AppWithNavigationState extends Component {
     componentDidMount() {
       FCM.requestPermissions(); // for iOS
       FCM.getFCMToken().then(token => {
-          //console.log('FCMToken: ' + token)
           // store fcm token in your server
+          //console.log('FCMToken: ' + token)
+          var data = {'token':token}
+          fetch(serverHost + '/users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', },
+            body: JSON.stringify(data)
+          })
       });
       this.notificationListener = FCM.on(FCMEvent.Notification, async (notif) => {
           // there are two parts of notif. notif.notification contains the notification payload, notif.data contains data payload
