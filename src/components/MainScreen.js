@@ -20,6 +20,15 @@ import {
 import { connect } from 'react-redux';
 import News from './News';
 
+isIpad = () => {
+  var width = Dimensions.get('window').width;
+  var height = Dimensions.get('window').height;
+  if (width == 768 && height == 1024) return true
+  if (width == 834 && height == 1112) return true
+  if (width == 1024 && height == 1366) return true
+
+  return false;
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -27,6 +36,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
+  title: {
+    flex:1,
+    paddingTop: (Platform.OS === 'ios') ? 3 : 0,
+    borderColor: '#fff',
+    width:Dimensions.get('window').width/3,
+    backgroundColor: 'rgba(255,255,255,0.8)',
+    color: '#222',textAlign:'center',position:'absolute',bottom:0,
+    fontSize:isIpad()?18:14,
+    lineHeight:isIpad()?28:25,
+    fontFamily:'Saysettha OT'
+  },
+  header: {
+    fontSize:isIpad()?22:18,
+    color:'#222',fontWeight:'100',
+    lineHeight:isIpad?34:28,
+    fontFamily:'Saysettha OT'
+  },
+  headerImage: {
+    width:isIpad()?60:40,
+    height:isIpad()?60:40,
+    margin:(Platform.OS === 'ios') ? 2 : 5,
+  }
 });
 
 var refreshing = false;
@@ -58,7 +89,7 @@ const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
     refreshing = true
     _onRefresh(init, initCategories)
   }
-
+  
   var all = []
   for (var index=0; index<categories.length; index+=3) {
 
@@ -82,15 +113,7 @@ const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
           <Text
           ellipsizeMode='tail'
           numberOfLines={1}
-          style={{
-            flex:1,
-            paddingTop: (Platform.OS === 'ios') ? 3 : 0,
-            borderColor: '#fff',
-            width:Dimensions.get('window').width/3,
-            backgroundColor: 'rgba(255,255,255,0.8)',
-            color: '#222',textAlign:'center',position:'absolute',bottom:0,
-            fontSize:14,lineHeight:25,fontFamily:'Saysettha OT'}}>
-              {categories[innerIndex].name}
+          style={styles.title} > {categories[innerIndex].name}
           </Text>
         </View>
       )
@@ -119,12 +142,12 @@ const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
     </View>
 
     </ScrollView>
-    <View style={{flexDirection:'row',justifyContent:'center'}}>
-      <AdMobBanner
-        style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
-        bannerSize="banner"
-        adUnitID="ca-app-pub-5604817964718511/5290589982"
-        testDeviceID="EMULATOR" />
+      <View style={{flexDirection:'row',justifyContent:'center'}}>
+        <AdMobBanner
+          style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
+          bannerSize="banner"
+          adUnitID="ca-app-pub-5604817964718511/5290589982"
+          testDeviceID="EMULATOR" />
       </View>
     </View>
   )
@@ -132,8 +155,8 @@ const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
 
 var header = <View style={{
   flexDirection:'row',justifyContent:'center',alignItems:'center',backgroundColor:'white'}} elevation={5}>
-  <Image style={{width:40,height:40,margin:(Platform.OS === 'ios') ? 2 : 5,}} source={require('../img/logo.png')}/>
-  <Text style={{fontSize:18,color:'#222',fontWeight:'100',lineHeight:28,fontFamily:'Saysettha OT'}}>ບອກຕໍ່</Text>
+  <Image style={styles.headerImage} source={require('../img/logo.png')}/>
+  <Text style={styles.header}>ບອກຕໍ່</Text>
 </View>
 
 MainScreen.navigationOptions = {

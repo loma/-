@@ -7,10 +7,21 @@ import {
   ScrollView,
   TouchableOpacity,
   Linking,
-  StyleSheet
+  StyleSheet,
+  Dimensions
 } from 'react-native';
 const CachedImage = require('react-native-cached-image');
 
+isIpad = () => {
+  var width = Dimensions.get('window').width;
+  var height = Dimensions.get('window').height;
+
+  if (width == 768 && height == 1024) return true
+  if (width == 834 && height == 1112) return true
+  if (width == 1024 && height == 1366) return true
+
+  return false;
+}
 const styles = StyleSheet.create({
   container: {
     flex:1,
@@ -21,17 +32,17 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flex:0.25,
-    width:150,
+    width:isIpad() ? 350 : 150,
     borderWidth:1,
     borderColor:'white'
   },
   image: {
     flex:1,
-    height:150,
+    height:isIpad() ? 350 : 150,
   },
   text: {
-    fontSize:12,
-    lineHeight:20,
+    fontSize: isIpad() ? 16 : 12,
+    lineHeight: isIpad() ? 28 : 20,
     fontFamily:'Saysettha ot',
     color:'#222'
   },

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   View,
+  Dimensions,
   ScrollView,
   Text,
   RefreshControl,
@@ -22,6 +23,16 @@ import {
 import { connect } from 'react-redux';
 import News from './News';
 
+isIpad = () => {
+  var width = Dimensions.get('window').width;
+  var height = Dimensions.get('window').height;
+
+  if (width == 768 && height == 1024) return true
+  if (width == 834 && height == 1112) return true
+  if (width == 1024 && height == 1366) return true
+
+  return false;
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -29,6 +40,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
+  header: {
+    fontWeight:'100',
+    lineHeight:isIpad()?34:28,
+    fontSize:isIpad()?22:18,
+    fontFamily:'Saysettha OT'
+  }
 });
 
 var refreshing = false;
@@ -88,7 +105,7 @@ class PromotionsScreen extends Component {
 
 PromotionsScreen.navigationOptions =
   ({ navigation }) => ({
-    title: <Text style={{fontWeight:'100',lineHeight:28,fontSize:18,fontFamily:'Saysettha OT'}}>{navigation.state.params.name}</Text>,
+    title: <Text style={styles.header}>{navigation.state.params.name}</Text>,
   });
 
 PromotionsScreen.propTypes = {
