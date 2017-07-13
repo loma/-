@@ -38,6 +38,7 @@ const initialNewsState = {
   userId: uniqueId,
   list: { },
   maxId: { },
+  lastReadId: { },
   loaded: {status:false},
   visible: false,
   initialPage: 0,
@@ -71,6 +72,10 @@ function news(state = initialNewsState, action) {
     case 'initCategories':
       return Object.assign({}, state, {
         categories: action.value,
+      })
+    case 'initLastReadCategories':
+      return Object.assign({}, state, {
+        lastReadId: Object.assign({}, state.lastReadId, action.value),
       })
     case 'init':
       var newList = {}

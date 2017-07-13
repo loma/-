@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   View,
+  AsyncStorage,
   Dimensions,
   ScrollView,
   Text,
@@ -66,6 +67,17 @@ function _onRefresh(init, initCat) {
 
 //const PromotionsScreen = ({selectedCatId, initCat, news, loaded, init}) => {
 class PromotionsScreen extends Component {
+  componentDidMount() {
+    const initLastReadCategories = this.props.initLastReadCategories
+    var lastReadId = this.props.lastReadId
+    lastReadId[this.props.selectedCatId] = this.props.maxId[this.props.selectedCatId]
+    AsyncStorage.setItem('@LASTREAD_ID:key', JSON.stringify(lastReadId))
+      .then((error)=>{
+        if (error == null) {
+          initLastReadCategories(lastReadId)
+        }
+      })
+  }
   render() {
     if (!this.props.loaded.status) {
       refreshing = true
@@ -82,6 +94,15 @@ class PromotionsScreen extends Component {
       if (values[index].category_id === this.props.selectedCatId && values[index].images.length > 0)
         allNews.push(values[index])
     }
+
+    var adv = __DEV__ ? null : <View style={{flexDirection:'row',justifyContent:'center'}}>
+          <AdMobBanner
+            style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
+            bannerSize="banner"
+            adUnitID="ca-app-pub-5604817964718511/5290589982"
+            testDeviceID="EMULATOR" />
+        </View>
+
     return (
       <View style={{flex:1}}>
         <FlatList
@@ -91,13 +112,7 @@ class PromotionsScreen extends Component {
           refreshing={refreshing}
           onRefresh={()=>{_onRefresh(this.props.init, this.props.initCat)}}
         />
-        <View style={{flexDirection:'row',justifyContent:'center'}}>
-          <AdMobBanner
-            style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
-            bannerSize="banner"
-            adUnitID="ca-app-pub-5604817964718511/5290589982"
-            testDeviceID="EMULATOR" />
-        </View>
+        {adv}
       </View>
     )
   }
@@ -118,9 +133,12 @@ const mapStateToProps = state => ({
   news: state.news.list,
   selectedCatId: state.news.selectedCatId,
   loaded: state.news.loaded,
+  maxId: state.news.maxId,
+  lastReadId: state.news.lastReadId
 });
 const mapDispatchToProps = dispatch => ({
   init: (news) => dispatch({ type: 'init', value:news }),
+  initLastReadCategories: (lastRead) => dispatch({ type: 'initLastReadCategories', value:lastRead }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PromotionsScreen);

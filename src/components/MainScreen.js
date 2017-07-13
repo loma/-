@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 var refreshing = false;
 var serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
 const uniqueId = require('react-native-device-info').getUniqueID();
-function _onRefresh(init, initCategories) {
+function _onRefresh(init, initCategories, initLastReadCategories) {
   fetch(serverHost + '/categories.json')
     .then((response) => response.json())
     .then((categories) => {
@@ -75,7 +75,7 @@ function _onRefresh(init, initCategories) {
 
   AsyncStorage.getItem('@LASTREAD_ID:key')
     .then((result) => {
-      console.log('async' + result)
+        if (result) initLastReadCategories(JSON.parse(result));
     })
 
   return fetch(serverHost + '/news.json')
@@ -102,7 +102,8 @@ class MainScreen extends Component {
     })
     const init = this.props.init
     const initCategories = this.props.initCategories
-    _onRefresh(init, initCategories)
+    const initLastReadCategories = this.props.initLastReadCategories
+    _onRefresh(init, initCategories, initLastReadCategories)
       .then(()=>{
         this.setState({
           refreshing:false
@@ -113,7 +114,10 @@ class MainScreen extends Component {
   render() {
     var categories = this.props.categories
     var maxId = this.props.maxId
+    var lastReadId = this.props.lastReadId
     const init = this.props.init
+    const initCategories = this.props.initCategories
+    const initLastReadCategories = this.props.initLastReadCategories
     const promotions = this.props.promotions
     var all = []
     for (var index=0; index<categories.length; index+=3) {
@@ -121,7 +125,7 @@ class MainScreen extends Component {
       var temp = []
       for (var innerIndex=index; innerIndex<Math.min(index+3, categories.length); innerIndex++) {
         var notif = null;
-        var currentId = 0
+        var currentId = lastReadId[categories[innerIndex].id] | 0
         if (currentId < maxId[categories[innerIndex].id]) {
             notif = <View style={{
               marginLeft:5,
@@ -173,7 +177,7 @@ class MainScreen extends Component {
       refreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}
-              onRefresh={()=>{_onRefresh(init, initCategories)}}
+              onRefresh={()=>{_onRefresh(init, initCategories, initLastReadCategories)}}
             />
           }
       >
@@ -215,11 +219,13 @@ MainScreen.propTypes = {
 const mapStateToProps = state => ({
   categories: state.news.categories,
   maxId: state.news.maxId,
+  lastReadId: state.news.lastReadId,
   loaded: state.news.loaded,
 });
 const mapDispatchToProps = dispatch => ({
   init: (news) => dispatch({ type: 'init', value:news }),
   initCategories: (cats) => dispatch({ type: 'initCategories', value:cats }),
+  initLastReadCategories: (lastRead) => dispatch({ type: 'initLastReadCategories', value:lastRead }),
   promotions: (id, n) => dispatch({ type: 'promotions', value:id, name:n }),
 });
 
