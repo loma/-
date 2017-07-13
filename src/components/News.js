@@ -46,14 +46,19 @@ const styles = StyleSheet.create({
     fontFamily:'Saysettha ot',
     color:'#222'
   },
+  newIcon: {
+    marginLeft:5,
+    width:25,
+    height:25
+  },
   fbIcon: {
     margin:5,
-    width:30,
-    height:30
+    width:20,
+    height:20
   }
 });
 
-const News = ({ data }) => {
+const News = ({ data, lastId}) => {
   images = [];
   index = 0;
   for (var image of data.images)
@@ -63,6 +68,7 @@ const News = ({ data }) => {
         <CachedImage resizeMode="cover" source={{uri:image}} style={styles.image} />
       </View>
     )
+    var newIcon = lastId >= data.id ? null : <CachedImage source={require('../img/newIcon.png')} style={styles.newIcon} />
 return (
   <View style={styles.container} elevation={5}>
     <ScrollView horizontal={true}>
@@ -71,10 +77,13 @@ return (
 
     <Text style={[styles.text, {marginLeft: 10,marginTop:5,marginLeft:10}]} numberOfLines={5}>{data.title}</Text>
     <View style={{flexDirection:'row',alignItems:'center' }}>
-      <TouchableOpacity onPress={()=>{Linking.openURL(data.fb_url).catch(err => console.error('An error occurred', err));}}>
+      {newIcon}
+      <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}} onPress={()=>{
+        Linking.openURL(data.fb_url).catch(err => console.error('An error occurred', err));
+      }}>
         <CachedImage source={require('../img/fb.png')} style={styles.fbIcon} />
+        <Text style={styles.text}>ກົດເພື່ອເບິ່ງລາຍລະອຽດໃນເຟສບຸກ</Text>
       </TouchableOpacity>
-      <Text style={styles.text}>ກົດເພື່ອເບິ່ງລາຍລະອຽດໃນເຟສບຸກ</Text>
     </View>
 
   </View>
@@ -83,6 +92,7 @@ return (
 
 News.propTypes = {
   data: PropTypes.object.isRequired,
+  lastId: PropTypes.number.isRequired,
 };
 
 export default News

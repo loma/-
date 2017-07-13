@@ -67,7 +67,7 @@ function _onRefresh(init, initCat) {
 
 //const PromotionsScreen = ({selectedCatId, initCat, news, loaded, init}) => {
 class PromotionsScreen extends Component {
-  componentDidMount() {
+  componentWillUnmount() {
     const initLastReadCategories = this.props.initLastReadCategories
     var lastReadId = this.props.lastReadId
     lastReadId[this.props.selectedCatId] = this.props.maxId[this.props.selectedCatId]
@@ -84,6 +84,7 @@ class PromotionsScreen extends Component {
       _onRefresh(this.props.init, this.props.initCat)
     }
 
+    var maxIdRead = this.props.maxId[this.props.selectedCatId]
     var allNews = []
     const news = this.props.news
     var keys = Object.keys(news);
@@ -103,11 +104,13 @@ class PromotionsScreen extends Component {
             testDeviceID="EMULATOR" />
         </View>
 
+    var lastReadId = this.props.lastReadId
+    var lastId = lastReadId[this.props.selectedCatId];
     return (
       <View style={{flex:1}}>
         <FlatList
           data={allNews}
-          renderItem={({item}) => <News key={item.id} data={item} /> }
+          renderItem={({item}) => <News key={item.id} data={item} lastId={lastId}/> }
           keyExtractor = {(item, index) => item.id}
           refreshing={refreshing}
           onRefresh={()=>{_onRefresh(this.props.init, this.props.initCat)}}
