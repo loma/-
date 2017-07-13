@@ -37,6 +37,7 @@ const uniqueId = require('react-native-device-info').getUniqueID();
 const initialNewsState = {
   userId: uniqueId,
   list: { },
+  maxId: { },
   loaded: {status:false},
   visible: false,
   initialPage: 0,
@@ -73,14 +74,18 @@ function news(state = initialNewsState, action) {
       })
     case 'init':
       var newList = {}
+      var maxIdByCateogry = {}
       for (var index in action.value) {
         var each = action.value[index]
         newList[each.id] = each
+        if (!maxIdByCateogry[each.category_id]) maxIdByCateogry[each.category_id] = 0
+        maxIdByCateogry[each.category_id] = Math.max(maxIdByCateogry[each.category_id], each.id)
         if (each.images) newList[each.id]['images'] = each.images.split(',')
         else newList[each.id]['images'] = []
       }
       return Object.assign({}, state, {
         list: newList,
+        maxId: maxIdByCateogry,
         loaded: {status:true}
       })
     default:

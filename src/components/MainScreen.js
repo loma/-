@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {
   StyleSheet,
@@ -9,7 +9,8 @@ import {
   RefreshControl,
   TouchableOpacity,
   Platform,
-  Dimensions
+  Dimensions,
+  AsyncStorage
 } from 'react-native';
 import {
   AdMobBanner,
@@ -39,6 +40,7 @@ const styles = StyleSheet.create({
   title: {
     flex:1,
     paddingTop: (Platform.OS === 'ios') ? 3 : 0,
+    paddingBottom: (Platform.OS === 'ios') ? 0 : 3,
     borderColor: '#fff',
     width:Dimensions.get('window').width/3,
     backgroundColor: 'rgba(255,255,255,0.8)',
@@ -67,90 +69,130 @@ function _onRefresh(init, initCategories) {
   fetch(serverHost + '/categories.json')
     .then((response) => response.json())
     .then((categories) => {
-      refreshing = false;
       initCategories(categories)
     })
     .catch((error) => {});
 
-  fetch(serverHost + '/news.json')
+  AsyncStorage.getItem('@LASTREAD_ID:key')
+    .then((result) => {
+      console.log('async' + result)
+    })
+
+  return fetch(serverHost + '/news.json')
     .then((response) => response.json())
     .then((news) => {
-      refreshing = false;
       init(news)
     })
     .catch((error) => {
-      refreshing = false;
       init([])
   });
 }
 
-const MainScreen = ({promotions, categories, loaded, init, initCategories}) => {
-  if (!loaded.status) {
-    refreshing = true
-    _onRefresh(init, initCategories)
-  }
-  
-  var all = []
-  for (var index=0; index<categories.length; index+=3) {
-
-    var temp = []
-    for (var innerIndex=index; innerIndex<Math.min(index+3, categories.length); innerIndex++) {
-      temp.push(
-        <View key={innerIndex} style={{justifyContent:'center',alignItems:'center'}}>
-      <TouchableOpacity onPress={promotions.bind(this, categories[innerIndex].id, categories[innerIndex].name)}>
-          <Image
-          resizeMode="cover"
-          elevation={5}
-          style={{backgroundColor:'white',
-            height:Dimensions.get('window').width/3,
-            width:Dimensions.get('window').width/3,
-            borderWidth:1,
-            borderColor: '#fff'
-          }}
-            source={{uri:categories[innerIndex].image}} >
-          </Image>
-      </TouchableOpacity>
-          <Text
-          ellipsizeMode='tail'
-          numberOfLines={1}
-          style={styles.title} > {categories[innerIndex].name}
-          </Text>
-        </View>
-      )
+//const MainScreen = ({promotions, categories, maxId, loaded, init, initCategories}) => {
+class MainScreen extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      refreshing:false
     }
-    all.push(
-    <View key={index} style={{flexDirection:'row'}}>
-      {temp}
-    </View>
-    )
-
+  }
+  componentDidMount() {
+    this.setState({
+      refreshing:true
+    })
+    const init = this.props.init
+    const initCategories = this.props.initCategories
+    _onRefresh(init, initCategories)
+      .then(()=>{
+        this.setState({
+          refreshing:false
+        })
+      })
   }
 
-  return (
-    <View style={{flex:1}}>
-    <ScrollView
-    refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={()=>{_onRefresh(init, initCategories)}}
-          />
+  render() {
+    var categories = this.props.categories
+    var maxId = this.props.maxId
+    const init = this.props.init
+    const promotions = this.props.promotions
+    var all = []
+    for (var index=0; index<categories.length; index+=3) {
+
+      var temp = []
+      for (var innerIndex=index; innerIndex<Math.min(index+3, categories.length); innerIndex++) {
+        var notif = null;
+        var currentId = 0
+        if (currentId < maxId[categories[innerIndex].id]) {
+            notif = <View style={{
+              marginLeft:5,
+              marginTop:2,
+              borderRadius:6,
+              width:12,height:12,
+              backgroundColor:'red',
+              top:5,right:7,
+              position:'absolute'
+            }}>
+            </View>
         }
-    >
-
-    <View style={{flexDirection:'column',justifyContent:'space-around'}}>
-      {all}
-    </View>
-
-    </ScrollView>
-      <View style={{flexDirection:'row',justifyContent:'center'}}>
-        <AdMobBanner
-          style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
-          bannerSize="banner"
-          adUnitID="ca-app-pub-5604817964718511/5290589982"
-          testDeviceID="EMULATOR" />
+        temp.push(
+          <View key={innerIndex} style={{justifyContent:'center',alignItems:'center'}}>
+            <TouchableOpacity onPress={promotions.bind(this, categories[innerIndex].id, categories[innerIndex].name)}>
+                <Image
+                resizeMode="cover"
+                elevation={5}
+                style={{backgroundColor:'white',
+                  height:Dimensions.get('window').width/3,
+                  width:Dimensions.get('window').width/3,
+                  borderWidth:1,
+                  borderColor: '#fff'
+                }}
+                  source={{uri:categories[innerIndex].image}} >
+                </Image>
+            </TouchableOpacity>
+            <Text
+            ellipsizeMode='tail'
+            numberOfLines={1}
+            style={[styles.title, ]} >
+              {categories[innerIndex].name}
+            </Text>
+            {notif}
+          </View>
+        )
+      }
+      all.push(
+      <View key={index} style={{flexDirection:'row'}}>
+        {temp}
       </View>
-    </View>
-  )
+      )
+
+    }
+
+    return (
+      <View style={{flex:1}}>
+      <ScrollView
+      refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={()=>{_onRefresh(init, initCategories)}}
+            />
+          }
+      >
+
+      <View style={{flexDirection:'column',justifyContent:'space-around'}}>
+        {all}
+      </View>
+
+      </ScrollView>
+        <View style={{flexDirection:'row',justifyContent:'center'}}>
+          <AdMobBanner
+            style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
+            bannerSize="banner"
+            adUnitID="ca-app-pub-5604817964718511/5290589982"
+            testDeviceID="EMULATOR" />
+        </View>
+      </View>
+    )
+  }
 }
 
 var header = <View style={{
@@ -172,6 +214,7 @@ MainScreen.propTypes = {
 
 const mapStateToProps = state => ({
   categories: state.news.categories,
+  maxId: state.news.maxId,
   loaded: state.news.loaded,
 });
 const mapDispatchToProps = dispatch => ({
