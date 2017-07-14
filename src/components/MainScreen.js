@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
   }
 });
 
-var refreshing = false;
 var serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
 const uniqueId = require('react-native-device-info').getUniqueID();
 function _onRefresh(init, initCategories, initLastReadCategories) {

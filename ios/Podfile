@@ -6,6 +6,7 @@ target 'BorkTor' do
   # use_frameworks!
 
   # Pods for BorkTor
+  pod 'Firebase/Core'
   pod 'Firebase/Messaging'
   pod 'Firebase/AdMob'
 

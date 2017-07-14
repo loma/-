@@ -32,6 +32,7 @@ PODS:
 
 DEPENDENCIES:
   - Firebase/AdMob
+  - Firebase/Core
   - Firebase/Messaging
 
 SPEC CHECKSUMS:
@@ -44,6 +45,6 @@ SPEC CHECKSUMS:
   GoogleToolboxForMac: 8e329f1b599f2512c6b10676d45736bcc2cbbeb0
   Protobuf: d582fecf68201eac3d79ed61369ef45734394b9c
 
-PODFILE CHECKSUM: 88bb4c7cc947bedb97c7583bd6bac924e974ca6c
+PODFILE CHECKSUM: 530fe163cd321761a9e5547bb4d2454ca274e8d6
 
 COCOAPODS: 1.2.1

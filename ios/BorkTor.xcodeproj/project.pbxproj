@@ -1334,7 +1334,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = BorkTor/BorkTor.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Chitpaseuth Somphet (2N4CH3XSAA)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 2N4CH3XSAA;
 				HEADER_SEARCH_PATHS = (
@@ -1355,8 +1355,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.BorkTorNew;
 				PRODUCT_NAME = BorkTor;
-				PROVISIONING_PROFILE = "69e7b09b-7a2e-49ec-8ff9-02851986eeae";
-				PROVISIONING_PROFILE_SPECIFIER = "My Distribution Profile";
+				PROVISIONING_PROFILE = "0ebd9f15-5619-4556-b8f0-ed8f79958eaf";
+				PROVISIONING_PROFILE_SPECIFIER = "Borktor App";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

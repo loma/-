@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import {
   StyleSheet,
   Image,
+  Alert,
   View,
   AsyncStorage,
   Dimensions,
@@ -49,24 +50,39 @@ const styles = StyleSheet.create({
   }
 });
 
-var refreshing = false;
 var serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
 function _onRefresh(init, initCat) {
-  refreshing = true;
-  fetch(serverHost + '/news.json')
+  return fetch(serverHost + '/news.json')
     .then((response) => response.json())
     .then((news) => {
-      refreshing = false;
       init(news)
     })
     .catch((error) => {
-      refreshing = false;
       init([])
   });
 }
 
 //const PromotionsScreen = ({selectedCatId, initCat, news, loaded, init}) => {
 class PromotionsScreen extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      refreshing:false
+    }
+  }
+
+  componentDidMount() {
+    Alert.alert(
+      'Alert Title',
+      'My Alert Msg',
+      [
+        {text: 'OK', onPress: () => {}},
+      ],
+      { cancelable: false }
+    )
+  }
+
   componentWillUnmount() {
     const initLastReadCategories = this.props.initLastReadCategories
     var lastReadId = this.props.lastReadId
@@ -78,12 +94,8 @@ class PromotionsScreen extends Component {
         }
       })
   }
-  render() {
-    if (!this.props.loaded.status) {
-      refreshing = true
-      _onRefresh(this.props.init, this.props.initCat)
-    }
 
+  render() {
     var maxIdRead = this.props.maxId[this.props.selectedCatId]
     var allNews = []
     const news = this.props.news
@@ -112,8 +124,14 @@ class PromotionsScreen extends Component {
           data={allNews}
           renderItem={({item}) => <News key={item.id} data={item} lastId={lastId}/> }
           keyExtractor = {(item, index) => item.id}
-          refreshing={refreshing}
-          onRefresh={()=>{_onRefresh(this.props.init, this.props.initCat)}}
+          refreshing={this.state.refreshing}
+          onRefresh={()=>{
+            this.setState({refreshing:true})
+            _onRefresh(this.props.init, this.props.initCat)
+              .then(()=>{
+                this.setState({refreshing:false})
+              })
+          }}
         />
         {adv}
       </View>
@@ -128,14 +146,12 @@ PromotionsScreen.navigationOptions =
 
 PromotionsScreen.propTypes = {
   news: PropTypes.object.isRequired,
-  loaded: PropTypes.object.isRequired,
   selectedCatId: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => ({
   news: state.news.list,
   selectedCatId: state.news.selectedCatId,
-  loaded: state.news.loaded,
   maxId: state.news.maxId,
   lastReadId: state.news.lastReadId
 });
