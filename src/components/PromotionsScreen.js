@@ -16,9 +16,6 @@ import {
 } from 'react-native';
 import {
   AdMobBanner,
-  AdMobInterstitial,
-  PublisherBanner,
-  AdMobRewarded
 } from 'react-native-admob'
 import DialogBox from 'react-native-dialogbox';
 
@@ -135,6 +132,8 @@ class PromotionsScreen extends Component {
           renderItem={({item}) => <News key={item.id} data={item} lastId={lastId}/> }
           keyExtractor = {(item, index) => item.id}
           refreshing={this.state.refreshing}
+          initialNumToRender={6}
+          showsVerticalScrollIndicator={false}
           onRefresh={()=>{
             this.setState({refreshing:true})
             _onRefresh(this.props.init, this.props.initCat)

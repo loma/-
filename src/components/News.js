@@ -71,7 +71,7 @@ const News = ({ data, lastId}) => {
     var newIcon = lastId >= data.id ? null : <CachedImage source={require('../img/newIcon.png')} style={styles.newIcon} />
 return (
   <View style={styles.container} elevation={5}>
-    <ScrollView horizontal={true}>
+    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
       {images}
     </ScrollView>
 

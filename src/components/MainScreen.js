@@ -14,10 +14,8 @@ import {
 } from 'react-native';
 import {
   AdMobBanner,
-  AdMobInterstitial,
-  PublisherBanner,
-  AdMobRewarded
 } from 'react-native-admob'
+const CachedImage = require('react-native-cached-image');
 import { connect } from 'react-redux';
 import News from './News';
 
@@ -146,7 +144,7 @@ class MainScreen extends Component {
         temp.push(
           <View key={innerIndex} style={{justifyContent:'center',alignItems:'center'}}>
             <TouchableOpacity onPress={promotions.bind(this, categories[innerIndex].id, categories[innerIndex].name)}>
-                <Image
+                <CachedImage
                 resizeMode="cover"
                 elevation={5}
                 style={{backgroundColor:'white',
@@ -156,7 +154,7 @@ class MainScreen extends Component {
                   borderColor: '#fff'
                 }}
                   source={{uri:categories[innerIndex].image}} >
-                </Image>
+                </CachedImage>
             </TouchableOpacity>
             <Text
             ellipsizeMode='tail'
@@ -179,13 +177,13 @@ class MainScreen extends Component {
     return (
       <View style={{flex:1}}>
       <ScrollView
-      refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={()=>{_onRefresh(init, initCategories, initLastReadCategories)}}
-            />
-          }
-      >
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={()=>{_onRefresh(init, initCategories, initLastReadCategories)}}
+              />
+        }>
 
       <View style={{flexDirection:'column',justifyContent:'space-around'}}>
         {all}
