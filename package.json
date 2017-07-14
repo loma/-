@@ -13,6 +13,7 @@
     "react-native-admob": "^1.3.0",
     "react-native-cached-image": "^1.3.4",
     "react-native-device-info": "^0.10.2",
+    "react-native-dialogbox": "^0.6.6",
     "react-native-fcm": "^7.1.0",
     "react-native-image-gallery": "^1.1.0",
     "react-native-lightbox": "^0.6.0",

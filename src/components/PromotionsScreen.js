@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import {
   StyleSheet,
   Image,
-  Alert,
   View,
   AsyncStorage,
   Dimensions,
@@ -21,6 +20,7 @@ import {
   PublisherBanner,
   AdMobRewarded
 } from 'react-native-admob'
+import DialogBox from 'react-native-dialogbox';
 
 import { connect } from 'react-redux';
 import News from './News';
@@ -61,7 +61,7 @@ function _onRefresh(init, initCat) {
       init([])
   });
 }
-
+var readVersion = 0;
 //const PromotionsScreen = ({selectedCatId, initCat, news, loaded, init}) => {
 class PromotionsScreen extends Component {
 
@@ -73,14 +73,24 @@ class PromotionsScreen extends Component {
   }
 
   componentDidMount() {
-    Alert.alert(
-      'Alert Title',
-      'My Alert Msg',
-      [
-        {text: 'OK', onPress: () => {}},
-      ],
-      { cancelable: false }
-    )
+    var readVersion = parseInt(this.props.readVersion)
+    const setReadVersion = this.props.setReadVersion
+    if (readVersion < 1) {
+      this.dialogbox.tip({
+        title: <Text style={styles.header}>ບອກຕໍ່</Text>,
+  			content: <Text style={{
+          fontFamily:'Saysettha OT',
+          lineHeight:28,
+        }}>ເຈົ້າສາມາດສະໄລ້ໄປທາງຂ້າງເພື່ອເບິ່ງຮູບຕື່ມໄດ້</Text>,
+  		}).then(() => {
+        AsyncStorage.setItem('@READ_VERSION:key', '1')
+          .then((error)=>{
+            if (error == null) {
+              setReadVersion(1)
+            }
+          })
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -134,6 +144,7 @@ class PromotionsScreen extends Component {
           }}
         />
         {adv}
+        <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }}/>
       </View>
     )
   }
@@ -153,11 +164,13 @@ const mapStateToProps = state => ({
   news: state.news.list,
   selectedCatId: state.news.selectedCatId,
   maxId: state.news.maxId,
-  lastReadId: state.news.lastReadId
+  lastReadId: state.news.lastReadId,
+  readVersion: state.news.readVersion
 });
 const mapDispatchToProps = dispatch => ({
   init: (news) => dispatch({ type: 'init', value:news }),
   initLastReadCategories: (lastRead) => dispatch({ type: 'initLastReadCategories', value:lastRead }),
+  setReadVersion: (version) => dispatch({ type: 'setReadVersion', value:version }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PromotionsScreen);

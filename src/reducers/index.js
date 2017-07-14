@@ -44,7 +44,8 @@ const initialNewsState = {
   initialPage: 0,
   images: [],
   categories: [],
-  selectedCatId: 0
+  selectedCatId: 0,
+  readVersion: 0
 };
 function news(state = initialNewsState, action) {
   switch (action.type) {
@@ -59,6 +60,10 @@ function news(state = initialNewsState, action) {
       return Object.assign({}, state, {
         list: currentList,
         tempNews: { like: 0, dislike: 0 }
+      })
+    case 'setReadVersion':
+      return Object.assign({}, state, {
+        readVersion: action.value
       })
     case 'setImage':
       return Object.assign({}, state, {

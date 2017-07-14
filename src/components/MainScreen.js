@@ -108,6 +108,12 @@ class MainScreen extends Component {
           refreshing:false
         })
       })
+
+    const setReadVersion = this.props.setReadVersion
+    AsyncStorage.getItem('@READ_VERSION:key')
+      .then((result)=>{
+        if (result) setReadVersion(result)
+      })
   }
 
   render() {
@@ -226,6 +232,7 @@ const mapDispatchToProps = dispatch => ({
   initCategories: (cats) => dispatch({ type: 'initCategories', value:cats }),
   initLastReadCategories: (lastRead) => dispatch({ type: 'initLastReadCategories', value:lastRead }),
   promotions: (id, n) => dispatch({ type: 'promotions', value:id, name:n }),
+  setReadVersion: (version) => dispatch({ type: 'setReadVersion', value:version }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);
