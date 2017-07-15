@@ -23,6 +23,7 @@ export const AppNavigator = StackNavigator({
 });
 
 var serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
+const uniqueId = require('react-native-device-info').getUniqueID();
 class AppWithNavigationState extends Component {
     shouldCloseApp(nav) {
       return nav.index === 0;
@@ -32,7 +33,7 @@ class AppWithNavigationState extends Component {
       FCM.getFCMToken().then(token => {
           // store fcm token in your server
           //console.log('FCMToken: ' + token)
-          var data = {'token':token}
+          var data = {'token':token,'uId':uniqueId}
           fetch(serverHost + '/users', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', },

@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   }
 });
 
-var serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
+var serverHost = !__DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
 function _onRefresh(init, initCat) {
   return fetch(serverHost + '/news.json')
     .then((response) => response.json())
@@ -70,7 +70,8 @@ class PromotionsScreen extends Component {
       news:[],
       modalVisible:true,
       refreshing:true,
-      minId:Number.MAX_SAFE_INTEGER
+      minId:Number.MAX_SAFE_INTEGER,
+      lastReadId:{}
     }
   }
 
@@ -92,44 +93,32 @@ class PromotionsScreen extends Component {
        });
   }
 
+  loadReadVersion() {
+    AsyncStorage.getItem('@LASTREAD_ID:key')
+      .then((result)=>{
+        if (result) {
+          this.setState({
+            lastReadId:JSON.parse(result)
+          })
+        }
+      })
+  }
+
   componentWillMount() {
     this.loadNews()
   }
 
   componentDidMount() {
-    //Alert.alert('title','message')
-    /*
-    var readVersion = parseInt(this.props.readVersion)
-    const setReadVersion = this.props.setReadVersion
-    if (readVersion < 1) {
-      setTimeout(() => {this.dialogbox.tip({
-        title: <Text style={styles.header}>ບອກຕໍ່</Text>,
-  			content: <Text style={{
-          fontFamily:'Saysettha OT',
-          lineHeight:28,
-        }}>ເຈົ້າສາມາດສະໄລ້ໄປທາງຂ້າງເພື່ອເບິ່ງຮູບຕື່ມໄດ້</Text>,
-  		}).then(() => {
-        AsyncStorage.setItem('@READ_VERSION:key', '1')
-          .then((error)=>{
-            if (error == null) {
-              setReadVersion(1)
-            }
-          })
-      });
-    }, 1000);
-    }
-    */
+    this.loadReadVersion()
   }
 
   componentWillUnmount() {
     const initLastReadCategories = this.props.initLastReadCategories
-    var lastReadId = this.props.lastReadId
-    lastReadId[this.props.selectedCatId] = this.props.maxId[this.props.selectedCatId]
+    var lastReadId = this.state.lastReadId
+    lastReadId[this.props.selectedCatId] = this.state.news[0].id
     AsyncStorage.setItem('@LASTREAD_ID:key', JSON.stringify(lastReadId))
-      .then((error)=>{
-        if (error == null) {
-          initLastReadCategories(lastReadId)
-        }
+      .then(()=>{
+        initLastReadCategories(lastReadId)
       })
   }
 
@@ -164,9 +153,7 @@ class PromotionsScreen extends Component {
   }
 
   render() {
-    var maxIdRead = this.props.maxId[this.props.selectedCatId]
     var news = this.state.news
-
     var adv = __DEV__ ? null : <View style={{flexDirection:'row',justifyContent:'center'}}>
           <AdMobBanner
             style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
@@ -175,7 +162,7 @@ class PromotionsScreen extends Component {
             testDeviceID="EMULATOR" />
         </View>
 
-    var lastReadId = this.props.lastReadId
+    var lastReadId = this.state.lastReadId
     var lastId = lastReadId[this.props.selectedCatId] | 0;
     return (
       <View style={{flex:1}}>

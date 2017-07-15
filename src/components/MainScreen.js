@@ -60,8 +60,7 @@ const styles = StyleSheet.create({
   }
 });
 
-var serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
-const uniqueId = require('react-native-device-info').getUniqueID();
+var serverHost = !__DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
 
 class MainScreen extends Component {
   constructor(props) {
@@ -70,7 +69,6 @@ class MainScreen extends Component {
       refreshing:true,
       categories:[],
       maxId:{},
-      lastReadId:{}
     }
   }
 
@@ -88,12 +86,11 @@ class MainScreen extends Component {
   }
 
   loadReadVersion() {
-    AsyncStorage.getItem('@READ_VERSION:key')
+    const initLastReadCategories = this.props.initLastReadCategories
+    AsyncStorage.getItem('@LASTREAD_ID:key')
       .then((result)=>{
         if (result) {
-          this.setState({
-            lastReadId:JSON.parse(result)
-          })
+          initLastReadCategories(JSON.parse(result))
         }
       })
   }
@@ -118,7 +115,7 @@ class MainScreen extends Component {
   render() {
     var categories = this.state.categories
     var maxId = this.state.maxId
-    var lastReadId = this.state.lastReadId
+    var lastReadId = this.props.lastReadId
     const promotions = this.props.promotions
     var all = []
     for (var index=0; index<categories.length; index+=3) {
@@ -143,15 +140,15 @@ class MainScreen extends Component {
           <View key={innerIndex} style={{justifyContent:'center',alignItems:'center'}}>
             <TouchableOpacity onPress={promotions.bind(this, categories[innerIndex].id, categories[innerIndex].name)}>
                 <CachedImage
-                resizeMode="cover"
-                elevation={5}
-                style={{backgroundColor:'white',
-                  height:Dimensions.get('window').width/3,
-                  width:Dimensions.get('window').width/3,
-                  borderWidth:1,
-                  borderColor: '#fff'
-                }}
-                  source={{uri:categories[innerIndex].image}} >
+                  resizeMode="cover"
+                  elevation={5}
+                  style={{backgroundColor:'white',
+                    height:Dimensions.get('window').width/3,
+                    width:Dimensions.get('window').width/3,
+                    borderWidth:1,
+                    borderColor: '#fff'
+                  }}
+                    source={{uri:categories[innerIndex].image}} >
                 </CachedImage>
             </TouchableOpacity>
             <Text
@@ -218,9 +215,12 @@ MainScreen.propTypes = {
   promotions: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({ });
+const mapStateToProps = state => ({
+  lastReadId: state.news.lastReadId,
+});
 const mapDispatchToProps = dispatch => ({
   promotions: (id, n) => dispatch({ type: 'promotions', value:id, name:n }),
+  initLastReadCategories: (lastRead) => dispatch({ type: 'initLastReadCategories', value:lastRead }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);

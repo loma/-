@@ -65,7 +65,7 @@ class News extends React.PureComponent {
     var data = this.props.data
     var lastId = this.props.lastId
     imagesData = data.images.split(',')
-    var newIcon = lastId >= data.id ? null : <Image source={require('../img/newIcon.png')} style={styles.newIcon} />
+    var newIcon = data.id > lastId ? <Image source={require('../img/newIcon.png')} style={styles.newIcon} /> : null
     return (
       <View style={styles.container} elevation={5}>
         <FlatList
