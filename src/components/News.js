@@ -64,12 +64,12 @@ class News extends React.PureComponent {
   render() {
     var data = this.props.data
     var lastId = this.props.lastId
-    imagesData = data.images.split(',')
+    imagesData = data.images.split(',').filter((a) => a!=='')
     var newIcon = data.id > lastId ? <Image source={require('../img/newIcon.png')} style={styles.newIcon} /> : null
     return (
       <View style={styles.container} elevation={5}>
         <FlatList
-          key={0}
+          initialNumToRender={3}
           style={{height:200,backgroundColor:'white',flex:1}}
           data={imagesData}
           keyExtractor = {(item, index) => index}
@@ -77,7 +77,7 @@ class News extends React.PureComponent {
           showsHorizontalScrollIndicator={false}
           renderItem={({item,index}) =>
             <FastImage
-              resizeMode={ FastImage.resizeMode.contain }
+              resizeMode={ FastImage.resizeMode.cover }
               source={{
                 uri:item,
                 priority: FastImage.priority.normal,

@@ -21,7 +21,6 @@ import {
   AdMobBanner,
 } from 'react-native-admob'
 import DialogBox from 'react-native-dialogbox';
-import {OptimizedFlatList} from 'react-native-optimized-flatlist'
 
 import { connect } from 'react-redux';
 import News from './News';
@@ -51,7 +50,7 @@ const styles = StyleSheet.create({
   }
 });
 
-var serverHost = !__DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
+var serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
 function _onRefresh(init, initCat) {
   return fetch(serverHost + '/news.json')
     .then((response) => response.json())
@@ -104,12 +103,9 @@ class PromotionsScreen extends Component {
       })
   }
 
-  componentWillMount() {
-    this.loadNews()
-  }
-
   componentDidMount() {
     this.loadReadVersion()
+    this.loadNews()
   }
 
   componentWillUnmount() {
@@ -163,23 +159,19 @@ class PromotionsScreen extends Component {
         </View>
 
     var lastReadId = this.state.lastReadId
-    var lastId = lastReadId[this.props.selectedCatId] | 0;
+    var lastId = lastReadId[this.props.selectedCatId] | -1;
     return (
       <View style={{flex:1}}>
         <FlatList
           data={news}
-          renderItem={({item}) => <News data={item} lastId={lastId}/> }
+          renderItem={({item}) =>  <News data={item} lastId={lastId}/> }
           extraData={this.state}
           keyExtractor = {(item, index) => item.id}
           refreshing={this.state.refreshing}
-          showsVerticalScrollIndicator={false}
           onRefresh={()=>{
-            this.setState({refreshing:true})
-            _onRefresh(this.props.init, this.props.initCat)
-              .then(()=>{
-                this.setState({refreshing:false})
-              })
+            this.handleLoadMore()
           }}
+          showsVerticalScrollIndicator={false}
           onEndReached={() => {this.handleLoadMore()}}
           onEndReachedThreshold={0.25}
         />

@@ -15,6 +15,7 @@ import {
 import {
   AdMobBanner,
 } from 'react-native-admob'
+import FastImage from 'react-native-fast-image'
 const CachedImage = require('react-native-cached-image');
 import { connect } from 'react-redux';
 import News from './News';
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
   }
 });
 
-var serverHost = !__DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
+var serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
 
 class MainScreen extends Component {
   constructor(props) {
@@ -139,8 +140,8 @@ class MainScreen extends Component {
         temp.push(
           <View key={innerIndex} style={{justifyContent:'center',alignItems:'center'}}>
             <TouchableOpacity onPress={promotions.bind(this, categories[innerIndex].id, categories[innerIndex].name)}>
-                <CachedImage
-                  resizeMode="cover"
+                <FastImage
+                  resizeMode={ FastImage.resizeMode.cover }
                   elevation={5}
                   style={{backgroundColor:'white',
                     height:Dimensions.get('window').width/3,
@@ -148,8 +149,7 @@ class MainScreen extends Component {
                     borderWidth:1,
                     borderColor: '#fff'
                   }}
-                    source={{uri:categories[innerIndex].image}} >
-                </CachedImage>
+                    source={{uri:categories[innerIndex].image}} />
             </TouchableOpacity>
             <Text
             ellipsizeMode='tail'
