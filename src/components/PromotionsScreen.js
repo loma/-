@@ -4,6 +4,9 @@ import React, {
 import PropTypes from 'prop-types';
 import {
   StyleSheet,
+  Modal,
+  Alert,
+  TouchableHighlight,
   Image,
   View,
   AsyncStorage,
@@ -18,6 +21,7 @@ import {
   AdMobBanner,
 } from 'react-native-admob'
 import DialogBox from 'react-native-dialogbox';
+import {OptimizedFlatList} from 'react-native-optimized-flatlist'
 
 import { connect } from 'react-redux';
 import News from './News';
@@ -58,22 +62,47 @@ function _onRefresh(init, initCat) {
       init([])
   });
 }
-var readVersion = 0;
 //const PromotionsScreen = ({selectedCatId, initCat, news, loaded, init}) => {
 class PromotionsScreen extends Component {
-
   constructor(props) {
     super(props)
     this.state = {
-      refreshing:false
+      news:[],
+      modalVisible:true,
+      refreshing:true,
+      minId:Number.MAX_SAFE_INTEGER
     }
   }
 
+  loadNews() {
+    this.setState({ refreshing:true })
+    var category_id = this.props.selectedCatId
+    fetch(serverHost + '/news.json?category_id=' + category_id)
+      .then((response) => response.json())
+      .then((news) => {
+        var minId = news[news.length - 1].id
+        this.setState({
+          refreshing:false,
+          news:news,
+          minId:minId
+        })
+      })
+      .catch((error) => {
+        this.setState({ refreshing:false })
+       });
+  }
+
+  componentWillMount() {
+    this.loadNews()
+  }
+
   componentDidMount() {
+    //Alert.alert('title','message')
+    /*
     var readVersion = parseInt(this.props.readVersion)
     const setReadVersion = this.props.setReadVersion
     if (readVersion < 1) {
-      this.dialogbox.tip({
+      setTimeout(() => {this.dialogbox.tip({
         title: <Text style={styles.header}>ບອກຕໍ່</Text>,
   			content: <Text style={{
           fontFamily:'Saysettha OT',
@@ -87,7 +116,9 @@ class PromotionsScreen extends Component {
             }
           })
       });
+    }, 1000);
     }
+    */
   }
 
   componentWillUnmount() {
@@ -102,18 +133,39 @@ class PromotionsScreen extends Component {
       })
   }
 
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
+  }
+
+  handleLoadMore() {
+    if (this.state.refreshing) return
+    this.setState({ refreshing:true })
+    var category_id = this.props.selectedCatId
+    fetch(serverHost + '/news.json?field=more&id='+this.state.minId+'&category_id=' + category_id)
+      .then((response) => response.json())
+      .then((news) => {
+        var minId = this.state.minId
+        var oldNews = this.state.news
+        for(var n of news) {
+          if (n.id < minId) {
+            oldNews.push(n)
+            minId = n.id
+          }
+        }
+        this.setState({
+          refreshing:false,
+          news:oldNews,
+          minId:minId
+        })
+      })
+      .catch((error) => {
+        this.setState({ refreshing:false })
+      });
+  }
+
   render() {
     var maxIdRead = this.props.maxId[this.props.selectedCatId]
-    var allNews = []
-    const news = this.props.news
-    var keys = Object.keys(news);
-    var values = keys.map(function(v) { return news[v]; });
-    values.sort((a,b) => {return b.id - a.id})
-
-    for(var index in values) {
-      if (values[index].category_id === this.props.selectedCatId && values[index].images.length > 0)
-        allNews.push(values[index])
-    }
+    var news = this.state.news
 
     var adv = __DEV__ ? null : <View style={{flexDirection:'row',justifyContent:'center'}}>
           <AdMobBanner
@@ -124,15 +176,15 @@ class PromotionsScreen extends Component {
         </View>
 
     var lastReadId = this.props.lastReadId
-    var lastId = lastReadId[this.props.selectedCatId];
+    var lastId = lastReadId[this.props.selectedCatId] | 0;
     return (
       <View style={{flex:1}}>
         <FlatList
-          data={allNews}
-          renderItem={({item}) => <News key={item.id} data={item} lastId={lastId}/> }
+          data={news}
+          renderItem={({item}) => <News data={item} lastId={lastId}/> }
+          extraData={this.state}
           keyExtractor = {(item, index) => item.id}
           refreshing={this.state.refreshing}
-          initialNumToRender={6}
           showsVerticalScrollIndicator={false}
           onRefresh={()=>{
             this.setState({refreshing:true})
@@ -141,9 +193,10 @@ class PromotionsScreen extends Component {
                 this.setState({refreshing:false})
               })
           }}
+          onEndReached={() => {this.handleLoadMore()}}
+          onEndReachedThreshold={0.25}
         />
         {adv}
-        <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }}/>
       </View>
     )
   }
@@ -155,19 +208,16 @@ PromotionsScreen.navigationOptions =
   });
 
 PromotionsScreen.propTypes = {
-  news: PropTypes.object.isRequired,
   selectedCatId: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => ({
-  news: state.news.list,
   selectedCatId: state.news.selectedCatId,
   maxId: state.news.maxId,
   lastReadId: state.news.lastReadId,
   readVersion: state.news.readVersion
 });
 const mapDispatchToProps = dispatch => ({
-  init: (news) => dispatch({ type: 'init', value:news }),
   initLastReadCategories: (lastRead) => dispatch({ type: 'initLastReadCategories', value:lastRead }),
   setReadVersion: (version) => dispatch({ type: 'setReadVersion', value:version }),
 });

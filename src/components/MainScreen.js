@@ -62,65 +62,63 @@ const styles = StyleSheet.create({
 
 var serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
 const uniqueId = require('react-native-device-info').getUniqueID();
-function _onRefresh(init, initCategories, initLastReadCategories) {
-  fetch(serverHost + '/categories.json')
-    .then((response) => response.json())
-    .then((categories) => {
-      initCategories(categories)
-    })
-    .catch((error) => {});
 
-  AsyncStorage.getItem('@LASTREAD_ID:key')
-    .then((result) => {
-        if (result) initLastReadCategories(JSON.parse(result));
-    })
-
-  return fetch(serverHost + '/news.json')
-    .then((response) => response.json())
-    .then((news) => {
-      init(news)
-    })
-    .catch((error) => {
-      init([])
-  });
-}
-
-//const MainScreen = ({promotions, categories, maxId, loaded, init, initCategories}) => {
 class MainScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      refreshing:false
+      refreshing:true,
+      categories:[],
+      maxId:{},
+      lastReadId:{}
     }
   }
-  componentDidMount() {
-    this.setState({
-      refreshing:true
-    })
-    const init = this.props.init
-    const initCategories = this.props.initCategories
-    const initLastReadCategories = this.props.initLastReadCategories
-    _onRefresh(init, initCategories, initLastReadCategories)
-      .then(()=>{
+
+  loadCategories() {
+    this.setState({ refreshing:true })
+    fetch(serverHost + '/categories.json')
+      .then((response) => response.json())
+      .then((categories) => {
         this.setState({
-          refreshing:false
+          refreshing:false,
+          categories:categories
         })
       })
+      .catch((error) => {});
+  }
 
-    const setReadVersion = this.props.setReadVersion
+  loadReadVersion() {
     AsyncStorage.getItem('@READ_VERSION:key')
       .then((result)=>{
-        if (result) setReadVersion(result)
+        if (result) {
+          this.setState({
+            lastReadId:JSON.parse(result)
+          })
+        }
       })
+  }
+
+  loadMaxId() {
+    fetch(serverHost + '/news.json?field=maxId')
+      .then((response) => response.json())
+      .then((maxId) => {
+        this.setState({
+          maxId:maxId
+        })
+      })
+      .catch((error) => {});
+  }
+
+  componentWillMount() {
+    this.loadCategories()
+    this.loadMaxId()
+    this.loadReadVersion()
   }
 
   render() {
-    var categories = this.props.categories
-    var maxId = this.props.maxId
-    var lastReadId = this.props.lastReadId
-    const init = this.props.init
-    const initCategories = this.props.initCategories
-    const initLastReadCategories = this.props.initLastReadCategories
+    var categories = this.state.categories
+    var maxId = this.state.maxId
+    var lastReadId = this.state.lastReadId
     const promotions = this.props.promotions
     var all = []
     for (var index=0; index<categories.length; index+=3) {
@@ -181,7 +179,10 @@ class MainScreen extends Component {
         refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}
-                onRefresh={()=>{_onRefresh(init, initCategories, initLastReadCategories)}}
+                onRefresh={()=>{
+                  this.loadCategories()
+                  this.loadMaxId()
+                }}
               />
         }>
 
@@ -214,23 +215,12 @@ MainScreen.navigationOptions = {
 };
 
 MainScreen.propTypes = {
-  categories: PropTypes.array.isRequired,
   promotions: PropTypes.func.isRequired,
-  loaded: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
-  categories: state.news.categories,
-  maxId: state.news.maxId,
-  lastReadId: state.news.lastReadId,
-  loaded: state.news.loaded,
-});
+const mapStateToProps = state => ({ });
 const mapDispatchToProps = dispatch => ({
-  init: (news) => dispatch({ type: 'init', value:news }),
-  initCategories: (cats) => dispatch({ type: 'initCategories', value:cats }),
-  initLastReadCategories: (lastRead) => dispatch({ type: 'initLastReadCategories', value:lastRead }),
   promotions: (id, n) => dispatch({ type: 'promotions', value:id, name:n }),
-  setReadVersion: (version) => dispatch({ type: 'setReadVersion', value:version }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);

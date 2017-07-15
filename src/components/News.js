@@ -8,9 +8,10 @@ import {
   TouchableOpacity,
   Linking,
   StyleSheet,
+  FlatList,
   Dimensions
 } from 'react-native';
-const CachedImage = require('react-native-cached-image');
+import FastImage from 'react-native-fast-image'
 
 isIpad = () => {
   var width = Dimensions.get('window').width;
@@ -58,36 +59,46 @@ const styles = StyleSheet.create({
   }
 });
 
-const News = ({ data, lastId}) => {
-  images = [];
-  index = 0;
-  for (var image of data.images)
-    if (image !== '')
-    images.push(
-      <View key={index++} style={styles.innerContainer}>
-        <CachedImage resizeMode="cover" source={{uri:image}} style={styles.image} />
+class News extends React.PureComponent {
+
+  render() {
+    var data = this.props.data
+    var lastId = this.props.lastId
+    imagesData = data.images.split(',')
+    var newIcon = lastId >= data.id ? null : <Image source={require('../img/newIcon.png')} style={styles.newIcon} />
+    return (
+      <View style={styles.container} elevation={5}>
+        <FlatList
+          key={0}
+          style={{height:200,backgroundColor:'white',flex:1}}
+          data={imagesData}
+          keyExtractor = {(item, index) => index}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({item,index}) =>
+            <FastImage
+              resizeMode={ FastImage.resizeMode.contain }
+              source={{
+                uri:item,
+                priority: FastImage.priority.normal,
+              }}
+              style={{width:200,height:200,marginLeft:0.5,marginRight:0.5}} />
+        }/>
+
+        <Text style={[styles.text, {marginLeft: 10,marginTop:5,marginLeft:10}]} numberOfLines={5}>{data.title}</Text>
+        <View style={{flexDirection:'row',alignItems:'center' }}>
+          {newIcon}
+          <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}} onPress={()=>{
+            Linking.openURL(data.fb_url).catch(err => console.error('An error occurred', err));
+          }}>
+            <Image source={require('../img/fb.png')} style={styles.fbIcon} />
+            <Text style={styles.text}>ກົດເພື່ອເບິ່ງລາຍລະອຽດໃນເຟສບຸກ</Text>
+          </TouchableOpacity>
+        </View>
+
       </View>
     )
-    var newIcon = lastId >= data.id ? null : <CachedImage source={require('../img/newIcon.png')} style={styles.newIcon} />
-return (
-  <View style={styles.container} elevation={5}>
-    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
-      {images}
-    </ScrollView>
-
-    <Text style={[styles.text, {marginLeft: 10,marginTop:5,marginLeft:10}]} numberOfLines={5}>{data.title}</Text>
-    <View style={{flexDirection:'row',alignItems:'center' }}>
-      {newIcon}
-      <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}} onPress={()=>{
-        Linking.openURL(data.fb_url).catch(err => console.error('An error occurred', err));
-      }}>
-        <CachedImage source={require('../img/fb.png')} style={styles.fbIcon} />
-        <Text style={styles.text}>ກົດເພື່ອເບິ່ງລາຍລະອຽດໃນເຟສບຸກ</Text>
-      </TouchableOpacity>
-    </View>
-
-  </View>
-)
+  }
 }
 
 News.propTypes = {

@@ -75,9 +75,14 @@ function news(state = initialNewsState, action) {
         visible: action.value,
       })
     case 'initCategories':
+      newState = JSON.parse(JSON.stringify(state))
+      newState['categories'] = action.value
+      return newState
+      /*
       return Object.assign({}, state, {
         categories: action.value,
       })
+      */
     case 'initLastReadCategories':
       return Object.assign({}, state, {
         lastReadId: Object.assign({}, state.lastReadId, action.value),

@@ -13,6 +13,7 @@
 		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
 		00E356F31AD99517003FC87E /* BorkTorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* BorkTorTests.m */; };
+		025C47EC962047668318EF2A /* libFastImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EE58E907B434D2DAA00279E /* libFastImage.a */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
@@ -288,6 +289,13 @@
 			remoteGlobalIDString = 139D7E881E25C6D100323FB7;
 			remoteInfo = "double-conversion";
 		};
+		FAAEF0DC1F1A20CB0098ACE8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3423788C49564E00B263CDF5 /* FastImage.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A287971D1DE0C0A60081BDFA;
+			remoteInfo = FastImage;
+		};
 		FAE424951F01119100396A63 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C3C178A3E2B2451EB14AB0CC /* RCTMaterialKit.xcodeproj */;
@@ -318,7 +326,9 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = BorkTor/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = BorkTor/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		1EE58E907B434D2DAA00279E /* libFastImage.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libFastImage.a; sourceTree = "<group>"; };
 		289ABCCA968A8D9FF67691F9 /* Pods-BorkTorTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BorkTorTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-BorkTorTests/Pods-BorkTorTests.release.xcconfig"; sourceTree = "<group>"; };
+		3423788C49564E00B263CDF5 /* FastImage.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = FastImage.xcodeproj; path = "../node_modules/react-native-fast-image/ios/FastImage.xcodeproj"; sourceTree = "<group>"; };
 		38FF2BA9E05A481C90B50ECD /* RNAdMobManager.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNAdMobManager.xcodeproj; path = "../node_modules/react-native-admob/ios/RNAdMobManager.xcodeproj"; sourceTree = "<group>"; };
 		3DD06EF95D9442728329F1F2 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
@@ -373,6 +383,7 @@
 				A15884C59ABE4729BD5F46F8 /* libRNAdMobManager.a in Frameworks */,
 				DDFF772076BE41978E023C16 /* libRNFIRMessaging.a in Frameworks */,
 				4DC91D53A5018C27D48408BD /* libPods-BorkTor.a in Frameworks */,
+				025C47EC962047668318EF2A /* libFastImage.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -547,6 +558,7 @@
 				AE707EBA58584D6589FFEDCB /* RNFetchBlob.xcodeproj */,
 				38FF2BA9E05A481C90B50ECD /* RNAdMobManager.xcodeproj */,
 				ECE1771CF0A540F894E4DDAD /* RNFIRMessaging.xcodeproj */,
+				3423788C49564E00B263CDF5 /* FastImage.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -623,6 +635,14 @@
 				FA2A97551F13CBD700438C49 /* libPods-BorkTor.a */,
 				FA2A97571F13CBD700438C49 /* libPods-BorkTorTests.a */,
 				FA2A97591F13CBD700438C49 /* libProtobuf.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FAAEF0D91F1A20CB0098ACE8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FAAEF0DD1F1A20CB0098ACE8 /* libFastImage.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -717,6 +737,10 @@
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = FAAEF0D91F1A20CB0098ACE8 /* Products */;
+					ProjectRef = 3423788C49564E00B263CDF5 /* FastImage.xcodeproj */;
+				},
 				{
 					ProductGroup = FA2A974C1F13CBD600438C49 /* Products */;
 					ProjectRef = FA2A974B1F13CBD600438C49 /* Pods.xcodeproj */;
@@ -1040,6 +1064,13 @@
 			remoteRef = FA3887BD1EFD21FC00819601 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		FAAEF0DD1F1A20CB0098ACE8 /* libFastImage.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libFastImage.a;
+			remoteRef = FAAEF0DC1F1A20CB0098ACE8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		FAE424961F01119100396A63 /* libRCTMaterialKit.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1235,12 +1266,14 @@
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-admob/ios",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
+					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
 				);
 				INFOPLIST_FILE = BorkTorTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1270,12 +1303,14 @@
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-admob/ios",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
+					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
 				);
 				INFOPLIST_FILE = BorkTorTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1309,6 +1344,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-admob/ios",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
+					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
 				);
 				INFOPLIST_FILE = BorkTor/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1344,6 +1380,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-admob/ios",
 					"$(SRCROOT)/../node_modules/react-native-fcm/ios",
+					"$(SRCROOT)/../node_modules/react-native-fast-image/ios/FastImage/**",
 				);
 				INFOPLIST_FILE = BorkTor/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
