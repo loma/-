@@ -70,7 +70,6 @@ class PromotionsScreen extends Component {
       modalVisible:true,
       refreshing:true,
       minId:Number.MAX_SAFE_INTEGER,
-      lastReadId:{}
     }
   }
 
@@ -92,25 +91,13 @@ class PromotionsScreen extends Component {
        });
   }
 
-  loadReadVersion() {
-    AsyncStorage.getItem('@LASTREAD_ID:key')
-      .then((result)=>{
-        if (result) {
-          this.setState({
-            lastReadId:JSON.parse(result)
-          })
-        }
-      })
-  }
-
   componentDidMount() {
-    this.loadReadVersion()
     this.loadNews()
   }
 
   componentWillUnmount() {
     const initLastReadCategories = this.props.initLastReadCategories
-    var lastReadId = this.state.lastReadId
+    var lastReadId = this.props.lastReadId
     lastReadId[this.props.selectedCatId] = this.state.news[0].id
     AsyncStorage.setItem('@LASTREAD_ID:key', JSON.stringify(lastReadId))
       .then(()=>{
@@ -158,8 +145,9 @@ class PromotionsScreen extends Component {
             testDeviceID="EMULATOR" />
         </View>
 
-    var lastReadId = this.state.lastReadId
-    var lastId = lastReadId[this.props.selectedCatId] | -1;
+    var lastReadId = this.props.lastReadId
+    var lastId = lastReadId[this.props.selectedCatId];
+    if (lastId === undefined) lastId = 0
     return (
       <View style={{flex:1}}>
         <FlatList
@@ -192,9 +180,7 @@ PromotionsScreen.propTypes = {
 
 const mapStateToProps = state => ({
   selectedCatId: state.news.selectedCatId,
-  maxId: state.news.maxId,
   lastReadId: state.news.lastReadId,
-  readVersion: state.news.readVersion
 });
 const mapDispatchToProps = dispatch => ({
   initLastReadCategories: (lastRead) => dispatch({ type: 'initLastReadCategories', value:lastRead }),
