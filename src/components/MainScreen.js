@@ -19,6 +19,7 @@ import FastImage from 'react-native-fast-image'
 const CachedImage = require('react-native-cached-image');
 import { connect } from 'react-redux';
 import News from './News';
+import Menu from './Menu';
 
 isIpad = () => {
   var width = Dimensions.get('window').width;
@@ -48,17 +49,13 @@ const styles = StyleSheet.create({
     lineHeight:isIpad()?28:25,
     fontFamily:'Saysettha OT'
   },
-  header: {
-    fontSize:isIpad()?22:18,
-    color:'#222',fontWeight:'100',
-    lineHeight:isIpad?34:28,
-    fontFamily:'Saysettha OT'
+  newIcon: {
+    position:'absolute',
+    top: 5,
+    right: 5,
+    width:20,
+    height:20
   },
-  headerImage: {
-    width:isIpad()?60:40,
-    height:isIpad()?60:40,
-    margin:(Platform.OS === 'ios') ? 2 : 5,
-  }
 });
 
 var serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
@@ -68,8 +65,8 @@ class MainScreen extends Component {
     super(props)
     this.state = {
       refreshing:true,
-      categories:[],
-      maxId:{},
+      pages:[],
+      categories:[]
     }
   }
 
@@ -85,10 +82,22 @@ class MainScreen extends Component {
       })
       .catch((error) => {});
   }
+  loadShops() {
+    this.setState({ refreshing:true })
+    fetch(serverHost + '/pages.json')
+      .then((response) => response.json())
+      .then((pages) => {
+        this.setState({
+          refreshing:false,
+          pages:pages
+        })
+      })
+      .catch((error) => {});
+  }
 
   loadReadVersion() {
     const initLastReadCategories = this.props.initLastReadCategories
-    AsyncStorage.getItem('@LASTREAD_ID:key')
+    AsyncStorage.getItem('@LASTREADID:key')
       .then((result)=>{
         if (result) {
           initLastReadCategories(JSON.parse(result))
@@ -96,78 +105,123 @@ class MainScreen extends Component {
       })
   }
 
-  loadMaxId() {
-    fetch(serverHost + '/news.json?field=maxId')
-      .then((response) => response.json())
-      .then((maxId) => {
-        this.setState({
-          maxId:maxId
-        })
+  loadLikes() {
+    const initLikes = this.props.initLikes
+    AsyncStorage.getItem('@LIKES:key')
+      .then((result)=>{
+        if (result) {
+          initLikes(JSON.parse(result))
+        }
       })
-      .catch((error) => {});
   }
 
   componentWillMount() {
     this.loadCategories()
-    this.loadMaxId()
+    this.loadLikes()
+    this.loadShops()
     this.loadReadVersion()
   }
 
   render() {
     var categories = this.state.categories
-    var maxId = this.state.maxId
+    var pages = this.state.pages
     var lastReadId = this.props.lastReadId
     const promotions = this.props.promotions
-    var all = []
-    for (var index=0; index<categories.length; index+=3) {
 
-      var temp = []
-      for (var innerIndex=index; innerIndex<Math.min(index+3, categories.length); innerIndex++) {
+    var tempCategories = {}
+    for (var c of categories) {
+      tempCategories[c.id] = {
+        header: <View key={'h' + c.id} style={{
+            backgroundColor:'white',
+            alignItems:'center',
+          }}
+          elevation={2}>
+            <Text style={{
+              fontSize:18,
+              margin:5,
+              color:'#222',
+              fontFamily:'Saysettha OT'
+            }}>{c.name}</Text>
+          </View>,
+        pages: []
+      }
+    }
+
+    for (var p of pages) {
+      var cId = p.category_id
+      if (tempCategories[cId]) {
+
         var notif = null;
-        var currentId = lastReadId[categories[innerIndex].id] | 0
-        if (currentId < maxId[categories[innerIndex].id]) {
-            notif = <View style={{
-              marginLeft:5,
-              marginTop:2,
-              borderRadius:6,
-              width:12,height:12,
-              backgroundColor:'red',
-              top:5,right:7,
-              position:'absolute'
-            }}>
-            </View>
+        var pageId = p.id
+        var name = p.name
+        var currentId = lastReadId[pageId] | 0
+        var lastId = p.last_id | 0
+        if (currentId < lastId) {
+            notif = <Image resizeMode={'contain'} source={require('../img/star.png')} style={styles.newIcon} />
         }
-        temp.push(
-          <View key={innerIndex} style={{justifyContent:'center',alignItems:'center'}}>
-            <TouchableOpacity onPress={promotions.bind(this, categories[innerIndex].id, categories[innerIndex].name)}>
-                <FastImage
-                  resizeMode={ FastImage.resizeMode.cover }
-                  elevation={5}
-                  style={{backgroundColor:'white',
-                    height:Dimensions.get('window').width/3,
-                    width:Dimensions.get('window').width/3,
-                    borderWidth:1,
-                    borderColor: '#fff'
-                  }}
-                    source={{uri:categories[innerIndex].image}} />
+        tempCategories[cId].pages.push(
+          <View key={p.id} style={{
+            justifyContent:'center',
+            alignItems:'center'
+          }}>
+            <TouchableOpacity onPress={promotions.bind(this, pageId, name)}>
+              <FastImage
+                resizeMode={ FastImage.resizeMode.cover }
+                elevation={3}
+                style={{backgroundColor:'white',
+                  height:Dimensions.get('window').width/3,
+                  width:Dimensions.get('window').width/3,
+                }}
+                source={{uri:p.picture}} />
             </TouchableOpacity>
             <Text
-            ellipsizeMode='tail'
-            numberOfLines={1}
-            style={[styles.title, ]} >
-              {categories[innerIndex].name}
+              ellipsizeMode='tail'
+              numberOfLines={1}
+              style={styles.title}>
+              {p.name}
             </Text>
             {notif}
           </View>
         )
       }
-      all.push(
-      <View key={index} style={{flexDirection:'row'}}>
-        {temp}
-      </View>
-      )
-
     }
+
+    var adv = <View style={{
+      flexDirection:'row',justifyContent:'center',
+      borderColor:'#CCC',backgroundColor:'rgba(0,0,0,0)',
+      borderBottomWidth:5
+    }}>
+          <AdMobBanner
+            style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
+            bannerSize="banner"
+            adUnitID="ca-app-pub-5604817964718511/5290589982"
+            testDeviceID="EMULATOR" />
+        </View>
+
+    var all = []
+    var categoryIndex = 0;
+    for (var cId in tempCategories) {
+      if (tempCategories[cId].pages.length === 0) continue
+      all.push(tempCategories[cId].header)
+      var pageCount = tempCategories[cId].pages.length
+      var pages = tempCategories[cId].pages
+      for (var index=0; index<pageCount; index+=3) {
+        var temp = []
+        for (var innerIndex=index; innerIndex<Math.min(index+3, pageCount); innerIndex++) {
+          temp.push(pages[innerIndex])
+        }
+        all.push(
+          <View key={'r' + cId + '-' + index}>
+            <View key={index} style={{flexDirection:'row'}}>
+              {temp}
+            </View>
+          </View>
+        )
+      }
+      all.push(<View key={'e' + cId} style={{padding:2,backgroundColor:'#CCC'}}></View>)
+    }
+
+
 
     return (
       <View style={{flex:1}}>
@@ -177,8 +231,7 @@ class MainScreen extends Component {
               <RefreshControl
                 refreshing={this.state.refreshing}
                 onRefresh={()=>{
-                  this.loadCategories()
-                  this.loadMaxId()
+                  this.loadShops()
                 }}
               />
         }>
@@ -188,27 +241,15 @@ class MainScreen extends Component {
       </View>
 
       </ScrollView>
-        <View style={{flexDirection:'row',justifyContent:'center'}}>
-          <AdMobBanner
-            style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
-            bannerSize="banner"
-            adUnitID="ca-app-pub-5604817964718511/5290589982"
-            testDeviceID="EMULATOR" />
-        </View>
+      <Menu page={'search'} {...this.props}/>
       </View>
     )
   }
 }
 
-var header = <View style={{
-  flexDirection:'row',justifyContent:'center',alignItems:'center',backgroundColor:'white'}} elevation={5}>
-  <Image style={styles.headerImage} source={require('../img/logo.png')}/>
-  <Text style={styles.header}>ບອກຕໍ່</Text>
-</View>
 
 MainScreen.navigationOptions = {
-  header: header,
-  headerStyle: {textAlign:'center'}
+  header: null,
 };
 
 MainScreen.propTypes = {
@@ -219,8 +260,10 @@ const mapStateToProps = state => ({
   lastReadId: state.news.lastReadId,
 });
 const mapDispatchToProps = dispatch => ({
+  navigate: (page, id, n) => dispatch({ type: page, value:id, name:n }),
   promotions: (id, n) => dispatch({ type: 'promotions', value:id, name:n }),
   initLastReadCategories: (lastRead) => dispatch({ type: 'initLastReadCategories', value:lastRead }),
+  initLikes: (likes) => dispatch({ type: 'init-likes', value:likes }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);

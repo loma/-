@@ -2,6 +2,9 @@ import { combineReducers } from 'redux';
 import { NavigationActions } from 'react-navigation';
 
 import { AppNavigator } from '../navigators/AppNavigator';
+import {
+  AsyncStorage,
+} from 'react-native';
 
 // Start with two routes: The Main screen, with the Login screen on top.
 const firstAction = AppNavigator.router.getActionForPathAndParams('Main');
@@ -12,6 +15,18 @@ const initialNavState = AppNavigator.router.getStateForAction(
 function nav(state = initialNavState, action) {
   let nextState;
   switch (action.type) {
+    case 'search':
+      nextState = AppNavigator.router.getStateForAction(
+        NavigationActions.navigate({ routeName: 'Main', params: {name: action.name}}),
+        state
+      );
+      break;
+    case 'likes':
+      nextState = AppNavigator.router.getStateForAction(
+        NavigationActions.navigate({ routeName: 'Likes', params: {name: action.name}}),
+        state
+      );
+      break;
     case 'promotions':
       nextState = AppNavigator.router.getStateForAction(
         NavigationActions.navigate({ routeName: 'Promotions', params: {name: action.name}}),
@@ -44,14 +59,31 @@ const initialNewsState = {
   initialPage: 0,
   images: [],
   categories: [],
-  selectedCatId: 0,
-  readVersion: 0
+  pageId: 0,
+  readVersion: 0,
+  likes: {}
 };
 function news(state = initialNewsState, action) {
   switch (action.type) {
+    case 'toggleLike':
+      var oldLikes = state.likes
+      if (oldLikes[action.value.id]) {
+        delete oldLikes[action.value.id]
+      } else {
+        oldLikes[action.value.id] = action.value
+      }
+      AsyncStorage.setItem('@LIKES:key', JSON.stringify(oldLikes))
+
+      return Object.assign({}, state, {
+        likes: Object.assign({}, {}, oldLikes)
+      })
+    case 'init-likes':
+      return Object.assign({}, state, {
+        likes: action.value
+      })
     case 'promotions':
       return Object.assign({}, state, {
-        selectedCatId: action.value
+        pageId: action.value
       })
     case 'Main':
       var currentList = Object.assign({}, state.list)
