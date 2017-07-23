@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   View,
   Image,
+  Platform,
   Text,
   ScrollView,
   TouchableOpacity,
@@ -49,8 +50,8 @@ const styles = StyleSheet.create({
     color:'#222'
   },
   newIcon: {
-    width:50,
-    height:50
+    width: (Platform.OS === 'ios') ? 20 : 50,
+    height: (Platform.OS === 'ios') ? 20 : 50,
   },
   fbIcon: {
     margin:5,
@@ -69,7 +70,7 @@ class News extends React.PureComponent {
     var data = this.props.data
     var lastId = this.props.lastId
     imagesData = data.images.split(',').filter((a) => a!=='')
-    var newIcon = data.id > lastId ? <Text><Image resizeMode={'contain'} source={require('../img/star.png')} style={styles.newIcon} />   </Text> : null
+    var newIcon = data.id <= lastId ? <Text><Image resizeMode={'contain'} source={require('../img/star.png')} style={styles.newIcon} /> </Text> : null
 
     var images = null
     if (imagesData.length === 1) {
@@ -101,7 +102,7 @@ class News extends React.PureComponent {
         <Text style={[styles.text, {marginLeft: 10,marginTop:5,marginRight:10,marginBottom:5}]} numberOfLines={8}>
           {newIcon}{data.description}
         </Text>
-        <View style={{flexDirection:'row',justifyContent:'space-around',borderTopWidth:0.7,borderColor:'#CCC'}}>
+        <View style={{flexDirection:'row',justifyContent:'space-around',borderTopWidth:1,borderColor:'#CCC'}}>
             <TouchableOpacity onPress={toggleLike.bind(this, this.props.data)}>
               <Image resizeMode={'contain'} source={require('../img/heart.png')} style={[styles.fbIcon, {opacity:data.like?1:0.4}]} />
             </TouchableOpacity>

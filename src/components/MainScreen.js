@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   },
 });
 
-var serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
+var serverHost = !__DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
 
 class MainScreen extends Component {
   constructor(props) {
@@ -137,7 +137,8 @@ class MainScreen extends Component {
           }}
           elevation={2}>
             <Text style={{
-              fontSize:18,
+              fontSize:14,
+              lineHeight:25,
               margin:5,
               color:'#222',
               fontFamily:'Saysettha OT'
@@ -224,7 +225,9 @@ class MainScreen extends Component {
 
 
     return (
-      <View style={{flex:1}}>
+      <View style={{flex:1,
+        paddingTop: (Platform.OS === 'ios') ? 23 : 0
+      }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={

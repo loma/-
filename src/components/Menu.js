@@ -84,12 +84,13 @@ class Menu extends React.Component {
     return (
     <View style={{
       flexDirection:'row',justifyContent:'space-around',
-      alignItems:'center',backgroundColor:'white'
+      alignItems:'center',backgroundColor:'white',
+      padding: (Platform.OS === 'ios') ? 5 : 0,
     }} elevation={5}>
-      <TouchableOpacity onPress={() => {navigate('search')} }>
+      <TouchableOpacity onPress={() => {if (this.props.page !== 'search') navigate('search')} }>
         <Image style={[styles.headerImage, {opacity:searchOpacity}]} source={require('../img/search.png')}/>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => {navigate('likes')} }>
+      <TouchableOpacity onPress={() => {if (this.props.page !== 'likes') navigate('likes')} }>
         <Image style={[styles.headerImage, {opacity:starOpacity}]} source={require('../img/heart.png')}/>
       </TouchableOpacity>
     </View>

@@ -104,13 +104,14 @@ class LikesScreen extends Component {
       posts[index]['like'] = likes[posts[index].id] ? true : false
     }
     return (
-      <View style={{flex:1}}>
+      <View style={{flex:1,
+        paddingTop: (Platform.OS === 'ios') ? 23 : 0
+      }}>
         <ListView
           dataSource={ds.cloneWithRows(posts)}
           renderRow={(rowData) => <News data={rowData} lastId={lastId} {...this.props}/>}
           refreshing={this.state.refreshing}
           onRefresh={()=>{
-            this.handleLoadMore()
           }}
           enableEmptySections={true}
           showsVerticalScrollIndicator={false}
