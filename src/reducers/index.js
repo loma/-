@@ -16,6 +16,10 @@ function nav(state = initialNavState, action) {
   let nextState;
   switch (action.type) {
     case 'search':
+      if (state.routes.length === 3 && state.routes[1].routeName === 'Promotions') {
+        state.routes.splice(1,1)
+        state.index = 1
+      }
       nextState = AppNavigator.router.getStateForAction(
         NavigationActions.back(),
         state

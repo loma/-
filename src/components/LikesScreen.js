@@ -80,10 +80,6 @@ class LikesScreen extends Component {
     this.loadNews()
   }
 
-  setModalVisible(visible) {
-    this.setState({modalVisible: visible});
-  }
-
   render() {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     var posts = this.state.posts
@@ -96,10 +92,6 @@ class LikesScreen extends Component {
             testDeviceID="EMULATOR" />
         </View>
 
-    var lastReadId = this.props.lastReadId
-    var lastId = lastReadId[this.props.pageId];
-    if (lastId === undefined) lastId = 0
-
     for (var index in posts) {
       posts[index]['like'] = likes[posts[index].id] ? true : false
     }
@@ -109,7 +101,7 @@ class LikesScreen extends Component {
       }}>
         <ListView
           dataSource={ds.cloneWithRows(posts)}
-          renderRow={(rowData) => <News data={rowData} lastId={lastId} {...this.props}/>}
+          renderRow={(rowData) => <News data={rowData} lastId={Number.MAX_SAFE_INTEGER} {...this.props}/>}
           refreshing={this.state.refreshing}
           onRefresh={()=>{
           }}
@@ -127,13 +119,10 @@ LikesScreen.navigationOptions = ({ navigation }) => ({
 });
 
 LikesScreen.propTypes = {
-  pageId: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => ({
-  pageId: state.news.pageId,
   likes: state.news.likes,
-  lastReadId: state.news.lastReadId,
 });
 const mapDispatchToProps = dispatch => ({
   setReadVersion: (version) => dispatch({ type: 'setReadVersion', value:version }),
