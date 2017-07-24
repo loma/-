@@ -52,7 +52,8 @@ const styles = StyleSheet.create({
   }
 });
 
-var serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
+const serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
+const uniqueId = require('react-native-device-info').getUniqueID();
 class PromotionsScreen extends Component {
   constructor(props) {
     super(props)
@@ -84,6 +85,12 @@ class PromotionsScreen extends Component {
 
   componentDidMount() {
     this.loadNews()
+    var data = {'uId':uniqueId,'page':'promotions','pageId':this.props.pageId}
+    fetch(serverHost + '/activities.json', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', },
+      body: JSON.stringify(data)
+    })
   }
 
   componentWillUnmount() {

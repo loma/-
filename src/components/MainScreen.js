@@ -58,7 +58,8 @@ const styles = StyleSheet.create({
   },
 });
 
-var serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
+const serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
+const uniqueId = require('react-native-device-info').getUniqueID();
 
 class MainScreen extends Component {
   constructor(props) {
@@ -89,7 +90,7 @@ class MainScreen extends Component {
       .then((pages) => {
         this.setState({
           refreshing:false,
-          pages:pages
+          pages:pages.sort((a,b) => { return a.order === b.order ? b.like - a.like : a.order - b.order })
         })
       })
       .catch((error) => {});
@@ -115,6 +116,15 @@ class MainScreen extends Component {
       })
   }
 
+  componentDidMount() {
+    var data = {'uId':uniqueId,'page':'search'}
+    fetch(serverHost + '/activities.json', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', },
+      body: JSON.stringify(data)
+    })
+  }
+
   componentWillMount() {
     this.loadCategories()
     this.loadLikes()
@@ -123,7 +133,7 @@ class MainScreen extends Component {
   }
 
   render() {
-    var categories = this.state.categories
+    var categories = this.state.categories.sort((a,b) => {return a.order === b.order ? a.id - b.id : a.order - b.order})
     var pages = this.state.pages
     var lastReadId = this.props.lastReadId
     const promotions = this.props.promotions
@@ -149,8 +159,8 @@ class MainScreen extends Component {
     }
 
     for (var p of pages) {
-      var cId = p.category_id
-      if (tempCategories[cId]) {
+      var category_id = p.category_id
+      if (tempCategories[category_id]) {
 
         var notif = null;
         var pageId = p.id
@@ -160,7 +170,7 @@ class MainScreen extends Component {
         if (currentId < lastId) {
             notif = <Image resizeMode={'contain'} source={require('../img/fire.png')} style={styles.newIcon} />
         }
-        tempCategories[cId].pages.push(
+        tempCategories[category_id].pages.push(
           <View key={p.id} style={{
             justifyContent:'center',
             alignItems:'center'
@@ -192,34 +202,35 @@ class MainScreen extends Component {
       borderColor:'#CCC',backgroundColor:'rgba(0,0,0,0)',
       borderBottomWidth:5
     }}>
-          <AdMobBanner
-            style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
-            bannerSize="banner"
-            adUnitID="ca-app-pub-5604817964718511/5290589982"
-            testDeviceID="EMULATOR" />
-        </View>
+      <AdMobBanner
+        style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
+        bannerSize="banner"
+        adUnitID="ca-app-pub-5604817964718511/5290589982"
+        testDeviceID="EMULATOR" />
+    </View>
 
     var all = []
     var categoryIndex = 0;
-    for (var cId in tempCategories) {
-      if (tempCategories[cId].pages.length === 0) continue
-      all.push(tempCategories[cId].header)
-      var pageCount = tempCategories[cId].pages.length
-      var pages = tempCategories[cId].pages
+    for (var index in categories) {
+      sortedIndex = categories[index].id
+      if (tempCategories[sortedIndex].pages.length === 0) continue
+      all.push(tempCategories[sortedIndex].header)
+      var pageCount = tempCategories[sortedIndex].pages.length
+      var pages = tempCategories[sortedIndex].pages
       for (var index=0; index<pageCount; index+=3) {
         var temp = []
         for (var innerIndex=index; innerIndex<Math.min(index+3, pageCount); innerIndex++) {
           temp.push(pages[innerIndex])
         }
         all.push(
-          <View key={'r' + cId + '-' + index}>
+          <View key={'r' + sortedIndex + '-' + index}>
             <View key={index} style={{flexDirection:'row'}}>
               {temp}
             </View>
           </View>
         )
       }
-      all.push(<View key={'e' + cId} style={{padding:2,backgroundColor:'#CCC'}}></View>)
+      all.push(<View key={'e' + sortedIndex} style={{padding:2,backgroundColor:'#CCC'}}></View>)
     }
 
 
@@ -264,7 +275,9 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => ({
   navigate: (page, id, n) => dispatch({ type: page, value:id, name:n }),
-  promotions: (id, n) => dispatch({ type: 'promotions', value:id, name:n }),
+  promotions: (id, n) => {
+    dispatch({ type: 'promotions', value:id, name:n })
+  },
   initLastReadCategories: (lastRead) => dispatch({ type: 'initLastReadCategories', value:lastRead }),
   initLikes: (likes) => dispatch({ type: 'init-likes', value:likes }),
 });

@@ -36,7 +36,7 @@ class AppWithNavigationState extends Component {
           // store fcm token in your server
           //console.log('FCMToken: ' + token)
           var data = {'token':token,'uId':uniqueId}
-          fetch(serverHost + '/users', {
+          fetch(serverHost + '/users.json', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', },
             body: JSON.stringify(data)
