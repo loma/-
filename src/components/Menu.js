@@ -75,7 +75,7 @@ class Menu extends React.Component {
 
   render() {
 
-    var searchOpacity = this.props.page == 'search' ? 1 : 0.4
+    var searchOpacity = this.props.page == 'search' || this.props.page == 'promotions' ? 1 : 0.4
     var starOpacity = this.props.page == 'likes' ? 1 : 0.4
     var settingsOpacity = this.props.page == 'settings' ? 1 : 0.4
 

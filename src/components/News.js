@@ -47,11 +47,12 @@ const styles = StyleSheet.create({
     fontSize: isIpad() ? 16 : 12,
     lineHeight: isIpad() ? 28 : 20,
     fontFamily:'Saysettha ot',
-    color:'#222'
+    color:'#222',
   },
   newIcon: {
-    width: (Platform.OS === 'ios') ? 20 : 50,
-    height: (Platform.OS === 'ios') ? 20 : 50,
+    width: 20,
+    height: 20,
+    marginRight:5
   },
   fbIcon: {
     margin:5,
@@ -65,12 +66,40 @@ const styles = StyleSheet.create({
 });
 
 class News extends React.PureComponent {
+  timeSince(date) {
+
+    var seconds = Math.floor((new Date() - date) / 1000);
+
+    var interval = Math.floor(seconds / 31536000);
+
+    if (interval > 1) {
+      return interval + " ປີ\n";
+    }
+    interval = Math.floor(seconds / 2592000);
+    if (interval > 1) {
+      return interval + " ເດືອນ\n";
+    }
+    interval = Math.floor(seconds / 86400);
+    if (interval > 1) {
+      return interval + " ມື້\n";
+    }
+    interval = Math.floor(seconds / 3600);
+    if (interval > 1) {
+      return interval + " ຊົ່ວໂມງ\n";
+    }
+    interval = Math.floor(seconds / 60);
+    if (interval > 1) {
+      return interval + " ນາທີ\n";
+    }
+    return Math.floor(seconds) + " seconds";
+  }
+
   render() {
     const toggleLike = this.props.toggleLike
     var data = this.props.data
     var lastId = this.props.lastId
     imagesData = data.images.split(',').filter((a) => a!=='')
-    var newIcon = data.id > lastId ? <Text><Image resizeMode={'contain'} source={require('../img/star.png')} style={styles.newIcon} /> </Text> : null
+    var newIcon = data.id > lastId ? <Image resizeMode={'contain'} source={require('../img/fire.png')} style={styles.newIcon} /> : null
 
     var images = null
     if (imagesData.length === 1) {
@@ -99,8 +128,13 @@ class News extends React.PureComponent {
     return (
       <View style={styles.container}>
         {images}
-        <Text style={[styles.text, {marginLeft: 10,marginTop:5,marginRight:10,marginBottom:5}]} numberOfLines={8}>
-          {newIcon}{data.description}
+        <View style={{paddingTop:10,paddingLeft:10,marginBottom:-5,flex:1,flexDirection:'row',justifyContent:'flex-start',alignItems:'flex-start'}}>
+          {newIcon}
+          <Image resizeMode={'contain'} source={require('../img/time.png')} style={styles.newIcon} />
+          <Text style={{fontFamily:'Saysettha OT',color:'#999',fontSize:10,textAlign: "center",paddingTop:5}}>{this.timeSince(new Date(data.created_at))}</Text>
+        </View>
+        <Text style={[styles.text, {marginLeft: 10,marginTop:5,marginRight:10,marginBottom:5}]} numberOfLines={9}>
+          {data.description}
         </Text>
         <View style={{flexDirection:'row',justifyContent:'space-around',borderTopWidth:1,borderColor:'#CCC'}}>
             <TouchableOpacity onPress={toggleLike.bind(this, this.props.data)}>

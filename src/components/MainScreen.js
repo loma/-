@@ -158,7 +158,7 @@ class MainScreen extends Component {
         var currentId = lastReadId[pageId] | 0
         var lastId = p.last_id | 0
         if (currentId < lastId) {
-            notif = <Image resizeMode={'contain'} source={require('../img/star.png')} style={styles.newIcon} />
+            notif = <Image resizeMode={'contain'} source={require('../img/fire.png')} style={styles.newIcon} />
         }
         tempCategories[cId].pages.push(
           <View key={p.id} style={{

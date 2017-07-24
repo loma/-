@@ -177,7 +177,7 @@ class PromotionsScreen extends Component {
             />
           }
         />
-        <Menu page={'search'} {...this.props} />
+        <Menu page={'promotions'} {...this.props} />
       </View>
     )
   }
@@ -200,7 +200,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   initLastReadCategories: (lastRead) => dispatch({ type: 'initLastReadCategories', value:lastRead }),
   setReadVersion: (version) => dispatch({ type: 'setReadVersion', value:version }),
-  navigate: (page, id, n) => dispatch({ type: page, value:id, name:n }),
+  navigate: (page, id, n) => dispatch({ type: page }),
   toggleLike: (post) => {
     dispatch({ type: 'toggleLike', value:post })
   },
