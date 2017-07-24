@@ -70,7 +70,7 @@ class News extends React.PureComponent {
     var data = this.props.data
     var lastId = this.props.lastId
     imagesData = data.images.split(',').filter((a) => a!=='')
-    var newIcon = data.id <= lastId ? <Text><Image resizeMode={'contain'} source={require('../img/star.png')} style={styles.newIcon} /> </Text> : null
+    var newIcon = data.id > lastId ? <Text><Image resizeMode={'contain'} source={require('../img/star.png')} style={styles.newIcon} /> </Text> : null
 
     var images = null
     if (imagesData.length === 1) {

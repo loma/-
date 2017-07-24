@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   },
 });
 
-var serverHost = !__DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
+var serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
 
 class MainScreen extends Component {
   constructor(props) {

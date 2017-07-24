@@ -17,7 +17,7 @@ function nav(state = initialNavState, action) {
   switch (action.type) {
     case 'search':
       nextState = AppNavigator.router.getStateForAction(
-        NavigationActions.navigate({ routeName: 'Main', params: {name: action.name}}),
+        NavigationActions.back(),
         state
       );
       break;

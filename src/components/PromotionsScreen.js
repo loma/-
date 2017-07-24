@@ -132,7 +132,7 @@ class PromotionsScreen extends Component {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     var posts = this.state.posts
     var likes = this.props.likes
-    var adv = <View style={{
+    var adv = __DEV__ ? null : <View style={{
       flexDirection:'row',justifyContent:'center',
       borderColor:'#CCC',backgroundColor:'#CCC',
       borderBottomWidth:5
