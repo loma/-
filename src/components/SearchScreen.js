@@ -53,21 +53,24 @@ const styles = StyleSheet.create({
 
 const serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
 const uniqueId = require('react-native-device-info').getUniqueID();
+import Search from 'react-native-search-box';
 class SearchScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
       posts: [],
       modalVisible:true,
-      refreshing:true,
+      refreshing:false,
       minId:Number.MAX_SAFE_INTEGER,
+      query:'',
     }
   }
 
   loadNews() {
+    var q = this.state.query
+    if (q === '') return
     this.setState({ refreshing:true })
-    var pageId = 0
-    fetch(serverHost + '/posts.json?pageId=' + pageId)
+    fetch(serverHost + '/posts.json?q=' + q)
       .then((response) => response.json())
       .then((posts) => {
         if (posts.length > 0) var minId = posts[posts.length - 1].id
@@ -82,37 +85,13 @@ class SearchScreen extends Component {
        });
   }
 
-  componentDidMount() {
-    this.loadNews()
-    var data = {'uId':uniqueId,'page':'hot','pageId':0}
-    fetch(serverHost + '/activities.json', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', },
-      body: JSON.stringify(data)
-    })
-  }
-
-  componentWillUnmount() {
-    const initLastReadCategories = this.props.initLastReadCategories
-    var lastReadId = this.props.lastReadId
-    if (this.state.posts.length > 0) {
-      lastReadId[0] = this.state.posts[0].id
-      AsyncStorage.setItem('@LASTREADID:key', JSON.stringify(lastReadId))
-        .then(()=>{
-          initLastReadCategories(lastReadId)
-        })
-    }
-  }
-
-  setModalVisible(visible) {
-    this.setState({modalVisible: visible});
-  }
-
   handleLoadMore() {
+    var q = this.state.query
+    if (q === '') return
     if (this.state.refreshing) return
     this.setState({ refreshing:true })
-    var pageId = 0
-    fetch(serverHost + '/posts.json?field=more&minId='+this.state.minId+'&pageId=' + pageId)
+    var q = this.state.query
+    fetch(serverHost + '/posts.json?field=more&minId='+this.state.minId+'&q=' + q)
       .then((response) => response.json())
       .then((posts) => {
         var minId = this.state.minId
@@ -134,6 +113,17 @@ class SearchScreen extends Component {
       });
   }
 
+  search(t) {
+    this.setState({query:t})
+    this.loadNews()
+    var q = this.state.query
+    var data = {'uId':uniqueId,'page':'search','value':q}
+    fetch(serverHost + '/activities.json', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', },
+      body: JSON.stringify(data)
+    })
+  }
   render() {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     var posts = this.state.posts
@@ -157,46 +147,46 @@ class SearchScreen extends Component {
     for (var index in posts) {
       posts[index]['like'] = likes[posts[index].id] ? true : false
     }
+
+    var list = null
+    if (this.state.posts.length === 0 && this.state.query !== '') {
+      list = <View style={{flex:1,padding:30}}>
+          <Text style={{textAlign:'center',fontSize:16,fontFamily:'Saysettha OT'}}>ບໍ່ມີສິນຄ້າທີ່ມີຄຳວ່າ {this.state.query}</Text>
+        </View>
+    } else {
+      list = <ListView
+        dataSource={ds.cloneWithRows(posts)}
+        renderRow={(rowData, sectionID, rowID, highlightRow) => {
+            if (rowID % 5 === 0)
+              return (<View><News data={rowData} lastId={lastId} {...this.props}/>{adv}</View>)
+            else
+              return (<News data={rowData} lastId={lastId} {...this.props}/>)
+          }
+        }
+        refreshing={this.state.refreshing}
+        onRefresh={()=>{
+          this.handleLoadMore()
+        }}
+        enableEmptySections={true}
+        showsVerticalScrollIndicator={false}
+        onEndReached={() => {this.handleLoadMore()}}
+        onEndReachedThreshold={500}
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={() => {this.handleLoadMore()}}
+          />
+        }
+      />
+    }
     return (
-      <View style={{flex:1}}>
-        <View style={{
-            backgroundColor:'#e77d1f',
-            alignItems:'center',
-            paddingTop: (Platform.OS === 'ios') ? 23 : 0
-          }}
-          elevation={2}>
-            <Text style={{
-              fontSize:16,
-              lineHeight:25,
-              margin:8,
-              color:'white',
-              fontFamily:'Saysettha OT'
-            }}>ສິນຄ້າມາໃຫ່ມ</Text>
-          </View>
-        <ListView
-          dataSource={ds.cloneWithRows(posts)}
-          renderRow={(rowData, sectionID, rowID, highlightRow) => {
-              if (rowID % 5 === 0)
-                return (<View><News data={rowData} lastId={lastId} {...this.props}/>{adv}</View>)
-              else
-                return (<News data={rowData} lastId={lastId} {...this.props}/>)
-            }
-          }
-          refreshing={this.state.refreshing}
-          onRefresh={()=>{
-            this.handleLoadMore()
-          }}
-          enableEmptySections={true}
-          showsVerticalScrollIndicator={false}
-          onEndReached={() => {this.handleLoadMore()}}
-          onEndReachedThreshold={500}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={() => {this.handleLoadMore()}}
-            />
-          }
-        />
+      <View style={{flex:1, paddingTop: (Platform.OS === 'ios') ? 23 : 0 }}>
+          <Search
+            backgroundColor={'#e77d1f'}
+            placeholder={'ຊອກຫາ'}
+            onSearch={(t) => {this.search(t)}}
+          />
+        {list}
       </View>
     )
   }

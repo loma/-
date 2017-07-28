@@ -101,6 +101,27 @@ class LikesScreen extends Component {
     for (var index in posts) {
       posts[index]['like'] = likes[posts[index].id] ? true : false
     }
+
+    var list = null
+    if (posts.length === 0 && this.state.refreshing === false) {
+      list = <View style={{flex:1,padding:30}}>
+          <Text style={{textAlign:'center',fontSize:16,fontFamily:'Saysettha OT'}}>
+            ເຈົ້າຍັງບໍ່ມີສິນຄ້າທີ່ມັກ, ກົດໃສ່ຮູບຫົວໃຈເພື່ອບັນທຶກ
+          </Text>
+          <Image resizeMode={'contain'} style={{height:'100%',width:'100%'}} source={require('../img/heart-tutorial.png')} />
+        </View>
+    } else {
+      list = <ListView
+          dataSource={ds.cloneWithRows(posts)}
+          renderRow={(rowData) => <News data={rowData} lastId={Number.MAX_SAFE_INTEGER} {...this.props}/>}
+          refreshing={this.state.refreshing}
+          onRefresh={()=>{
+          }}
+          enableEmptySections={true}
+          showsVerticalScrollIndicator={false}
+        />
+    }
+
     return (
       <View style={{flex:1}}>
       <View style={{
@@ -111,21 +132,13 @@ class LikesScreen extends Component {
         elevation={2}>
           <Text style={{
             fontSize:16,
-            lineHeight:25,
+            lineHeight:23,
             margin:8,
             color:'white',
             fontFamily:'Saysettha OT'
           }}>ສິນຄ້າທີ່ຂ້ອຍມັກ</Text>
         </View>
-        <ListView
-          dataSource={ds.cloneWithRows(posts)}
-          renderRow={(rowData) => <News data={rowData} lastId={Number.MAX_SAFE_INTEGER} {...this.props}/>}
-          refreshing={this.state.refreshing}
-          onRefresh={()=>{
-          }}
-          enableEmptySections={true}
-          showsVerticalScrollIndicator={false}
-        />
+        {list}
       </View>
     )
   }

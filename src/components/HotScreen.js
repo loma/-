@@ -167,7 +167,7 @@ class HotScreen extends Component {
           elevation={2}>
             <Text style={{
               fontSize:16,
-              lineHeight:25,
+              lineHeight:23,
               margin:8,
               color:'white',
               fontFamily:'Saysettha OT'

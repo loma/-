@@ -3092,6 +3092,10 @@ react-native-scroller@0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/react-native-scroller/-/react-native-scroller-0.0.6.tgz#dea8c89bd1ca2d2445fbb6b3a90960df6c1767ff"
 
+react-native-search-box@0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/react-native-search-box/-/react-native-search-box-0.0.9.tgz#c1677e127d6d2b346850b031b2cb216447fa66f0"
+
 react-native-tab-view@^0.0.65:
   version "0.0.65"
   resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-0.0.65.tgz#b685ea3081ff7c96486cd997361026c407302c59"

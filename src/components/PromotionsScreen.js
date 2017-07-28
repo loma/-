@@ -159,20 +159,20 @@ class PromotionsScreen extends Component {
     }
     return (
       <View style={{flex:1}}>
-        <View style={{
-            backgroundColor:'#e77d1f',
-            alignItems:'center',
-            paddingTop: (Platform.OS === 'ios') ? 23 : 0
-          }}
-          elevation={2}>
-            <Text style={{
-              fontSize:16,
-              lineHeight:25,
-              margin:8,
-              color:'white',
-              fontFamily:'Saysettha OT'
-            }}>{this.props.navigation.state.params.name}</Text>
-          </View>
+      <View style={{
+          backgroundColor:'#e77d1f',
+          alignItems:'center',
+          paddingTop: (Platform.OS === 'ios') ? 23 : 0
+        }}
+        elevation={2}>
+          <Text style={{
+            fontSize:16,
+            lineHeight:25,
+            margin:8,
+            color:'white',
+            fontFamily:'Saysettha OT'
+          }}>{this.props.navigation.state.params.name}</Text>
+        </View>
         <ListView
           dataSource={ds.cloneWithRows(posts)}
           renderRow={(rowData, sectionID, rowID, highlightRow) => {
