@@ -105,7 +105,7 @@ class LikesScreen extends Component {
     var list = null
     if (posts.length === 0 && this.state.refreshing === false) {
       list = <View style={{flex:1,padding:30}}>
-          <Text style={{textAlign:'center',fontSize:16,fontFamily:'Saysettha OT'}}>
+          <Text style={{textAlign:'center',lineHeight:28,color:'#777',fontSize:16,fontFamily:'Saysettha OT'}}>
             ເຈົ້າຍັງບໍ່ມີສິນຄ້າທີ່ມັກ, ກົດໃສ່ຮູບຫົວໃຈເພື່ອບັນທຶກ
           </Text>
           <Image resizeMode={'contain'} style={{height:'100%',width:'100%'}} source={require('../img/heart-tutorial.png')} />

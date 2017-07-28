@@ -59,7 +59,6 @@ class SearchScreen extends Component {
     super(props)
     this.state = {
       posts: [],
-      modalVisible:true,
       refreshing:false,
       minId:Number.MAX_SAFE_INTEGER,
       query:'',
@@ -151,7 +150,7 @@ class SearchScreen extends Component {
     var list = null
     if (this.state.posts.length === 0 && this.state.query !== '') {
       list = <View style={{flex:1,padding:30}}>
-          <Text style={{textAlign:'center',fontSize:16,fontFamily:'Saysettha OT'}}>ບໍ່ມີສິນຄ້າທີ່ມີຄຳວ່າ {this.state.query}</Text>
+          <Text style={{textAlign:'center',lineHeight:28,color:'#777',fontSize:16,fontFamily:'Saysettha OT'}}>ບໍ່ມີສິນຄ້າທີ່ມີຄຳວ່າ {this.state.query}</Text>
         </View>
     } else {
       list = <ListView
