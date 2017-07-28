@@ -38,6 +38,20 @@ function nav(state = initialNavState, action) {
         state
       );
       break;
+    case 'search':
+      var routeName = state.routes[state.index].routeName
+      if (routeName === 'Search') return state
+
+      if (state.routes.length > 0) {
+        state.routes.splice(1,state.routes.length - 1)
+        state.index = 0
+      }
+
+      nextState = AppNavigator.router.getStateForAction(
+        NavigationActions.navigate({ routeName: 'Search', params: {name: action.name}}),
+        state
+      );
+      break;
     case 'likes':
       var routeName = state.routes[state.index].routeName
       if (routeName === 'Likes') return state

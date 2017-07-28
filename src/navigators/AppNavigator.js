@@ -19,6 +19,7 @@ import MainScreen from '../components/MainScreen';
 import PromotionsScreen from '../components/PromotionsScreen';
 import LikesScreen from '../components/LikesScreen';
 import HotScreen from '../components/HotScreen';
+import SearchScreen from '../components/SearchScreen';
 import Menu from '../components/Menu';
 
 export const AppNavigator = StackNavigator({
@@ -26,6 +27,7 @@ export const AppNavigator = StackNavigator({
   Promotions: { screen: PromotionsScreen },
   Likes: { screen: LikesScreen },
   Hot: { screen: HotScreen },
+  Search: { screen: SearchScreen },
 });
 
 var serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
