@@ -143,12 +143,16 @@ class MainScreen extends Component {
           .then((result)=>{
             if (result) {
               var lastAlert = JSON.parse(result)
-              if (this.props.configs.alert_id > lastAlert.id) {
-                alert(this.props.configs.alert)
+              var lastId = lastAlert.id || 0;
+              if (parseInt(this.props.configs.alert_id) > parseInt(lastId)) {
+                if (this.props.configs.alert) alert(this.props.configs.alert)
+                  AsyncStorage.setItem('@ALERT:key', JSON.stringify({id:this.props.configs.alert_id}))
               }
             } else {
-              alert(this.props.configs.alert)
-              AsyncStorage.setItem('@ALERT:key', JSON.stringify({id:this.props.configs.alert_id}))
+              if (this.props.configs.alert) {
+                alert(this.props.configs.alert)
+                AsyncStorage.setItem('@ALERT:key', JSON.stringify({id:this.props.configs.alert_id}))
+              }
             }
           })
       })
