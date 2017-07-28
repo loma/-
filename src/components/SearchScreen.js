@@ -115,14 +115,17 @@ class SearchScreen extends Component {
   search(t) {
     this.setState({query:t})
     this.loadNews()
-    var q = this.state.query
-    var data = {'uId':uniqueId,'page':'search','value':q}
-    fetch(serverHost + '/activities.json', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', },
-      body: JSON.stringify(data)
-    })
+    if (this.props.configs.log_activity === 'true') {
+      var q = this.state.query
+      var data = {'uId':uniqueId,'page':'search','value':q}
+      fetch(serverHost + '/activities.json', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', },
+        body: JSON.stringify(data)
+      })
+    }
   }
+
   render() {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     var posts = this.state.posts
@@ -149,7 +152,7 @@ class SearchScreen extends Component {
     }
 
     var list = null
-    if (this.state.posts.length === 0 && this.state.query !== '') {
+    if (this.state.posts.length === 0 && this.state.query !== '' && this.state.refreshing === false) {
       list = <View style={{flex:1,padding:30}}>
           <Text style={{textAlign:'center',lineHeight:28,color:'#777',fontSize:16,fontFamily:'Saysettha OT'}}>ບໍ່ມີສິນຄ້າທີ່ມີຄຳວ່າ {this.state.query}</Text>
         </View>
@@ -203,6 +206,7 @@ SearchScreen.propTypes = {
 const mapStateToProps = state => ({
   likes: state.news.likes,
   lastReadId: state.news.lastReadId,
+  configs: state.news.configs
 });
 const mapDispatchToProps = dispatch => ({
   initLastReadCategories: (lastRead) => dispatch({ type: 'initLastReadCategories', value:lastRead }),

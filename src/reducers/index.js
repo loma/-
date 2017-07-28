@@ -115,10 +115,15 @@ const initialNewsState = {
   categories: [],
   pageId: 0,
   readVersion: 0,
-  likes: {}
+  likes: {},
+  configs: {}
 };
 function news(state = initialNewsState, action) {
   switch (action.type) {
+    case 'init-configs':
+      return Object.assign({}, state, {
+        configs: Object.assign({}, {}, action.value)
+      })
     case 'toggleLike':
       var oldLikes = state.likes
       if (oldLikes[action.value.id]) {
@@ -127,12 +132,14 @@ function news(state = initialNewsState, action) {
         oldLikes[action.value.id] = action.value
       }
       AsyncStorage.setItem('@LIKES:key', JSON.stringify(oldLikes))
-      var log = {'uId':uniqueId,'page':'toggle_like','value':''+action.value.id}
-      fetch(serverHost + '/activities.json', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', },
-        body: JSON.stringify(log)
-      })
+      if (state.configs.log_activity === 'true') {
+        var log = {'uId':uniqueId,'page':'toggle_like','value':''+action.value.id}
+        fetch(serverHost + '/activities.json', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', },
+          body: JSON.stringify(log)
+        })
+      }
 
       return Object.assign({}, state, {
         likes: Object.assign({}, {}, oldLikes)

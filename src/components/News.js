@@ -14,6 +14,7 @@ import {
   Dimensions
 } from 'react-native';
 import FastImage from 'react-native-fast-image'
+import { connect } from 'react-redux';
 
 isIpad = () => {
   var width = Dimensions.get('window').width;
@@ -148,12 +149,14 @@ class News extends React.PureComponent {
               <Image resizeMode={'contain'} source={heartImg} style={[styles.fbIcon]} />
             </TouchableOpacity>
             <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}} onPress={()=>{
-              var log = {'uId':uniqueId,'page':'fb_link','value':data.link}
-              fetch(serverHost + '/activities.json', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', },
-                body: JSON.stringify(log)
-              })
+              if (this.props.configs.log_activity === 'true') {
+                var log = {'uId':uniqueId,'page':'fb_link','value':data.link}
+                fetch(serverHost + '/activities.json', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json', },
+                  body: JSON.stringify(log)
+                })
+              }
               Linking.openURL(data.link).catch(err => console.error('An error occurred', err));
             }}>
               <Image resizeMode={'contain'} source={require('../img/fb-icon.png')} style={styles.fbIcon} />
@@ -169,5 +172,7 @@ News.propTypes = {
   data: PropTypes.object.isRequired,
   lastId: PropTypes.number.isRequired,
 };
-
-export default News
+const mapStateToProps = state => ({
+  configs: state.news.configs
+});
+export default connect(mapStateToProps)(News);

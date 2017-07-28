@@ -115,13 +115,30 @@ class MainScreen extends Component {
       })
   }
 
+  loadConfig() {
+    const initConfig = this.props.initConfig
+    return fetch(serverHost + '/configs.json')
+      .then((response) => response.json())
+      .then((configs) => {
+        var conf = {}
+        for (var c in configs) conf[configs[c].key] = configs[c].value
+        initConfig(conf)
+      })
+      .catch((error) => {});
+  }
+
   componentDidMount() {
-    var data = {'uId':uniqueId,'page':'search'}
-    fetch(serverHost + '/activities.json', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', },
-      body: JSON.stringify(data)
-    })
+    this.loadConfig()
+      .then(() => {
+        if (this.props.configs.log_activity === 'true') {
+          var data = {'uId':uniqueId,'page':'main'}
+          fetch(serverHost + '/activities.json', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', },
+            body: JSON.stringify(data)
+          })
+        }
+      })
   }
 
   componentWillMount() {
@@ -271,6 +288,7 @@ MainScreen.propTypes = {
 
 const mapStateToProps = state => ({
   lastReadId: state.news.lastReadId,
+  configs: state.news.configs,
 });
 const mapDispatchToProps = dispatch => ({
   navigate: (page, id, n) => dispatch({ type: page, value:id, name:n }),
@@ -279,6 +297,7 @@ const mapDispatchToProps = dispatch => ({
   },
   initLastReadCategories: (lastRead) => dispatch({ type: 'initLastReadCategories', value:lastRead }),
   initLikes: (likes) => dispatch({ type: 'init-likes', value:likes }),
+  initConfig: (conf) => dispatch({ type: 'init-configs', value:conf }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);

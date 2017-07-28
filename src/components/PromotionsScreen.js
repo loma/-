@@ -84,12 +84,14 @@ class PromotionsScreen extends Component {
 
   componentDidMount() {
     this.loadNews()
-    var data = {'uId':uniqueId,'page':'promotions','pageId':this.props.pageId}
-    fetch(serverHost + '/activities.json', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', },
-      body: JSON.stringify(data)
-    })
+    if (this.props.configs.log_activity === 'true') {
+      var data = {'uId':uniqueId,'page':'promotions','pageId':this.props.pageId}
+      fetch(serverHost + '/activities.json', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', },
+        body: JSON.stringify(data)
+      })
+    }
   }
 
   componentWillUnmount() {
@@ -216,6 +218,7 @@ const mapStateToProps = state => ({
   pageId: state.news.pageId,
   likes: state.news.likes,
   lastReadId: state.news.lastReadId,
+  configs: state.news.configs
 });
 const mapDispatchToProps = dispatch => ({
   initLastReadCategories: (lastRead) => dispatch({ type: 'initLastReadCategories', value:lastRead }),

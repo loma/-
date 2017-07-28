@@ -78,12 +78,14 @@ class LikesScreen extends Component {
 
   componentDidMount() {
     this.loadNews()
-    var data = {'uId':uniqueId,'page':'like'}
-    fetch(serverHost + '/activities.json', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', },
-      body: JSON.stringify(data)
-    })
+    if (this.props.configs.log_activity === 'true') {
+      var data = {'uId':uniqueId,'page':'like'}
+      fetch(serverHost + '/activities.json', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', },
+        body: JSON.stringify(data)
+      })
+    }
   }
 
   render() {
@@ -153,6 +155,7 @@ LikesScreen.propTypes = {
 
 const mapStateToProps = state => ({
   likes: state.news.likes,
+  configs: state.news.configs,
 });
 const mapDispatchToProps = dispatch => ({
   setReadVersion: (version) => dispatch({ type: 'setReadVersion', value:version }),
