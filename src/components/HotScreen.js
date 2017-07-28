@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
 
 const serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
 const uniqueId = require('react-native-device-info').getUniqueID();
-class PromotionsScreen extends Component {
+class HotScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -66,7 +66,7 @@ class PromotionsScreen extends Component {
 
   loadNews() {
     this.setState({ refreshing:true })
-    var pageId = this.props.pageId
+    var pageId = 0
     fetch(serverHost + '/posts.json?pageId=' + pageId)
       .then((response) => response.json())
       .then((posts) => {
@@ -84,7 +84,7 @@ class PromotionsScreen extends Component {
 
   componentDidMount() {
     this.loadNews()
-    var data = {'uId':uniqueId,'page':'promotions','pageId':this.props.pageId}
+    var data = {'uId':uniqueId,'page':'hot','pageId':0}
     fetch(serverHost + '/activities.json', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', },
@@ -96,7 +96,7 @@ class PromotionsScreen extends Component {
     const initLastReadCategories = this.props.initLastReadCategories
     var lastReadId = this.props.lastReadId
     if (this.state.posts.length > 0) {
-      lastReadId[this.props.pageId] = this.state.posts[0].id
+      lastReadId[0] = this.state.posts[0].id
       AsyncStorage.setItem('@LASTREADID:key', JSON.stringify(lastReadId))
         .then(()=>{
           initLastReadCategories(lastReadId)
@@ -111,7 +111,7 @@ class PromotionsScreen extends Component {
   handleLoadMore() {
     if (this.state.refreshing) return
     this.setState({ refreshing:true })
-    var pageId = this.props.pageId
+    var pageId = 0
     fetch(serverHost + '/posts.json?field=more&minId='+this.state.minId+'&pageId=' + pageId)
       .then((response) => response.json())
       .then((posts) => {
@@ -151,7 +151,7 @@ class PromotionsScreen extends Component {
         </View>
 
     var lastReadId = this.props.lastReadId
-    var lastId = lastReadId[this.props.pageId];
+    var lastId = lastReadId[0];
     if (lastId === undefined) lastId = 0
 
     for (var index in posts) {
@@ -171,7 +171,7 @@ class PromotionsScreen extends Component {
               margin:8,
               color:'white',
               fontFamily:'Saysettha OT'
-            }}>{this.props.navigation.state.params.name}</Text>
+            }}>ສິນຄ້າມາໃຫ່ມ</Text>
           </View>
         <ListView
           dataSource={ds.cloneWithRows(posts)}
@@ -202,17 +202,15 @@ class PromotionsScreen extends Component {
   }
 }
 
-PromotionsScreen.navigationOptions =
+HotScreen.navigationOptions =
   ({ navigation }) => ({
-    header:null
+    header: null
   });
 
-PromotionsScreen.propTypes = {
-  pageId: PropTypes.number.isRequired,
+HotScreen.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  pageId: state.news.pageId,
   likes: state.news.likes,
   lastReadId: state.news.lastReadId,
 });
@@ -225,4 +223,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PromotionsScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(HotScreen);

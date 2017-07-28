@@ -17,18 +17,52 @@ function nav(state = initialNavState, action) {
   let nextState;
   switch (action.type) {
     case 'main':
-      if (state.routes.length === 3 && state.routes[1].routeName === 'Promotions') {
-        state.routes.splice(1,1)
-        state.index = 1
+      var routeName = state.routes[state.index].routeName
+      if (routeName === 'Main') return state
+
+      if (routeName === 'Promotions') {
+        nextState = AppNavigator.router.getStateForAction(
+          NavigationActions.back(),
+          state
+        );
+        break;
       }
+
+      if (state.routes.length > 0) {
+        state.routes.splice(1,state.routes.length - 1)
+        state.index = 0
+      }
+
       nextState = AppNavigator.router.getStateForAction(
-        NavigationActions.back(),
+        NavigationActions.navigate({ routeName: 'Main', params: {name: action.name}}),
         state
       );
       break;
     case 'likes':
+      var routeName = state.routes[state.index].routeName
+      if (routeName === 'Likes') return state
+
+      if (state.routes.length > 0) {
+        state.routes.splice(1,state.routes.length - 1)
+        state.index = 0
+      }
+
       nextState = AppNavigator.router.getStateForAction(
         NavigationActions.navigate({ routeName: 'Likes', params: {name: action.name}}),
+        state
+      );
+      break;
+    case 'hot':
+      var routeName = state.routes[state.index].routeName
+      if (routeName === 'Hot') return state
+
+      if (state.routes.length > 0) {
+        state.routes.splice(1,state.routes.length - 1)
+        state.index = 0
+      }
+
+      nextState = AppNavigator.router.getStateForAction(
+        NavigationActions.navigate({ routeName: 'Hot', params: {name: action.name}}),
         state
       );
       break;

@@ -102,9 +102,21 @@ class LikesScreen extends Component {
       posts[index]['like'] = likes[posts[index].id] ? true : false
     }
     return (
-      <View style={{flex:1,
-        paddingTop: (Platform.OS === 'ios') ? 23 : 0
-      }}>
+      <View style={{flex:1}}>
+      <View style={{
+          backgroundColor:'#e77d1f',
+          alignItems:'center',
+          paddingTop: (Platform.OS === 'ios') ? 23 : 0
+        }}
+        elevation={2}>
+          <Text style={{
+            fontSize:16,
+            lineHeight:25,
+            margin:8,
+            color:'white',
+            fontFamily:'Saysettha OT'
+          }}>ສິນຄ້າທີ່ຂ້ອຍມັກ</Text>
+        </View>
         <ListView
           dataSource={ds.cloneWithRows(posts)}
           renderRow={(rowData) => <News data={rowData} lastId={Number.MAX_SAFE_INTEGER} {...this.props}/>}

@@ -132,7 +132,7 @@ class News extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        <View style={{paddingLeft:10,marginTop:5,flex:1,flexDirection:'row',justifyContent:'flex-start',alignItems:'flex-start'}}>
+        <View style={{paddingLeft:10,marginTop:5,borderBottomWidth:1,borderColor:'#CCC',flex:1,flexDirection:'row',justifyContent:'flex-start',alignItems:'flex-start'}}>
           {newIcon}
           <Image resizeMode={'contain'} source={require('../img/time.png')} style={styles.newIcon} />
           <Text style={{fontFamily:'Saysettha OT',color:'#999',fontSize:10,textAlign: "center",paddingTop:5}}>{this.timeSince(new Date(data.created_time))}</Text>
