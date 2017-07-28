@@ -4,6 +4,7 @@ import { NavigationActions } from 'react-navigation';
 import { AppNavigator } from '../navigators/AppNavigator';
 import {
   AsyncStorage,
+  Platform,
 } from 'react-native';
 
 // Start with two routes: The Main screen, with the Login screen on top.
@@ -15,7 +16,7 @@ const initialNavState = AppNavigator.router.getStateForAction(
 function nav(state = initialNavState, action) {
   let nextState;
   switch (action.type) {
-    case 'search':
+    case 'main':
       if (state.routes.length === 3 && state.routes[1].routeName === 'Promotions') {
         state.routes.splice(1,1)
         state.index = 1
@@ -52,6 +53,7 @@ function nav(state = initialNavState, action) {
   return nextState || state;
 }
 
+const serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
 const uniqueId = require('react-native-device-info').getUniqueID();
 const initialNewsState = {
   userId: uniqueId,
@@ -77,6 +79,12 @@ function news(state = initialNewsState, action) {
         oldLikes[action.value.id] = action.value
       }
       AsyncStorage.setItem('@LIKES:key', JSON.stringify(oldLikes))
+      var log = {'uId':uniqueId,'page':'toggle_like','value':''+action.value.id}
+      fetch(serverHost + '/activities.json', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', },
+        body: JSON.stringify(log)
+      })
 
       return Object.assign({}, state, {
         likes: Object.assign({}, {}, oldLikes)

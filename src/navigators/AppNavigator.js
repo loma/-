@@ -1,6 +1,7 @@
 import React, { Component }  from 'react';
 import {
   BackHandler,
+  View,
   Platform
 } from 'react-native';
 import PropTypes from 'prop-types';
@@ -17,6 +18,7 @@ import FCM, {
 import MainScreen from '../components/MainScreen';
 import PromotionsScreen from '../components/PromotionsScreen';
 import LikesScreen from '../components/LikesScreen';
+import Menu from '../components/Menu';
 
 export const AppNavigator = StackNavigator({
   Main: { screen: MainScreen },
@@ -93,10 +95,13 @@ class AppWithNavigationState extends Component {
     }
     render() {
       return (
-        <AppNavigator navigation={addNavigationHelpers({
-          dispatch: this.props.dispatch,
-          state: this.props.nav
-        })} />
+        <View style={{flex:1}}>
+          <AppNavigator navigation={addNavigationHelpers({
+            dispatch: this.props.dispatch,
+            state: this.props.nav
+          })} />
+          <Menu dispatch={this.props.dispatch} state={this.props.nav} />
+        </View>
         );
     }
   }

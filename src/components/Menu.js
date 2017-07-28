@@ -75,23 +75,32 @@ class Menu extends React.Component {
 
   render() {
 
-    var searchOpacity = this.props.page == 'search' || this.props.page == 'promotions' ? 1 : 0.4
-    var starOpacity = this.props.page == 'likes' ? 1 : 0.4
-    var settingsOpacity = this.props.page == 'settings' ? 1 : 0.4
+    const state = this.props.state
+    var routeName = state.routes[state.index].routeName
 
+    var mainImg = routeName === 'Main' || routeName === 'Promotions' ? require('../img/logo.png') : require('../img/logo_unselected.png')
+    var searchImg = routeName === 'Search' ? require('../img/search.png') : require('../img/search_unselected.png')
+    var hotImg = routeName === 'Hot' ? require('../img/fire.png') : require('../img/fire_unselected.png')
+    var likeImg = routeName === 'Likes' ? require('../img/heart.png') : require('../img/heart_unselected.png')
 
-    const navigate = this.props.navigate
+    const dispatch = this.props.dispatch
     return (
     <View style={{
       flexDirection:'row',justifyContent:'space-around',
       alignItems:'center',backgroundColor:'white',
       padding: (Platform.OS === 'ios') ? 5 : 0,
     }} elevation={5}>
-      <TouchableOpacity onPress={() => {if (this.props.page !== 'search') navigate('search')} }>
-        <Image style={[styles.headerImage, {opacity:searchOpacity}]} source={require('../img/search.png')}/>
+      <TouchableOpacity onPress={() => {dispatch({type:'main'})} }>
+        <Image style={styles.headerImage} source={mainImg}/>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => {if (this.props.page !== 'likes') navigate('likes')} }>
-        <Image style={[styles.headerImage, {opacity:starOpacity}]} source={require('../img/heart.png')}/>
+      <TouchableOpacity onPress={() => {dispatch({type:'search'})} }>
+        <Image style={styles.headerImage} source={searchImg}/>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => {dispatch({type:'hot'})} }>
+        <Image style={styles.headerImage} source={hotImg}/>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => {dispatch({type:'likes'})} }>
+        <Image style={styles.headerImage} source={likeImg}/>
       </TouchableOpacity>
     </View>
     )
@@ -100,8 +109,7 @@ class Menu extends React.Component {
       //<Image style={[styles.headerImage, {opacity:settingsOpacity}]} source={require('../img/settings.png')}/>
 
 Menu.propTypes = {
-  page: PropTypes.string.isRequired,
-  navigate: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 export default Menu

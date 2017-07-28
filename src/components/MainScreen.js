@@ -19,7 +19,6 @@ import FastImage from 'react-native-fast-image'
 const CachedImage = require('react-native-cached-image');
 import { connect } from 'react-redux';
 import News from './News';
-import Menu from './Menu';
 
 isIpad = () => {
   var width = Dimensions.get('window').width;
@@ -142,15 +141,15 @@ class MainScreen extends Component {
     for (var c of categories) {
       tempCategories[c.id] = {
         header: <View key={'h' + c.id} style={{
-            backgroundColor:'white',
+            backgroundColor:'#e77d1f',
             alignItems:'center',
           }}
           elevation={2}>
             <Text style={{
-              fontSize:14,
+              fontSize:16,
               lineHeight:25,
-              margin:5,
-              color:'#222',
+              margin:8,
+              color:'white',
               fontFamily:'Saysettha OT'
             }}>{c.name}</Text>
           </View>,
@@ -230,7 +229,7 @@ class MainScreen extends Component {
           </View>
         )
       }
-      all.push(<View key={'e' + sortedIndex} style={{padding:2,backgroundColor:'#CCC'}}></View>)
+      all.push(<View key={'e' + sortedIndex} style={{padding:5,backgroundColor:'#CCC'}}></View>)
     }
 
 
@@ -245,6 +244,7 @@ class MainScreen extends Component {
               <RefreshControl
                 refreshing={this.state.refreshing}
                 onRefresh={()=>{
+                  this.loadCategories()
                   this.loadShops()
                 }}
               />
@@ -255,7 +255,6 @@ class MainScreen extends Component {
       </View>
 
       </ScrollView>
-      <Menu page={'search'} {...this.props}/>
       </View>
     )
   }

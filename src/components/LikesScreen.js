@@ -25,7 +25,6 @@ import DialogBox from 'react-native-dialogbox';
 
 import { connect } from 'react-redux';
 import News from './News';
-import Menu from './Menu';
 
 isIpad = () => {
   var width = Dimensions.get('window').width;
@@ -115,7 +114,6 @@ class LikesScreen extends Component {
           enableEmptySections={true}
           showsVerticalScrollIndicator={false}
         />
-        <Menu page={'likes'} {...this.props} />
       </View>
     )
   }

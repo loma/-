@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   container: {
     flex:1,
     flexDirection:'column',
-    borderBottomWidth:5,
+    borderBottomWidth:15,
     borderColor:'#CCC',
     backgroundColor:'white'
   },
@@ -65,6 +65,9 @@ const styles = StyleSheet.create({
   }
 });
 
+const serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
+const uniqueId = require('react-native-device-info').getUniqueID();
+
 class News extends React.PureComponent {
   timeSince(date) {
 
@@ -91,7 +94,7 @@ class News extends React.PureComponent {
     if (interval > 1) {
       return interval + " ນາທີ\n";
     }
-    return Math.floor(seconds) + " seconds";
+    return Math.floor(seconds) + " ວິນາທີ";
   }
 
   render() {
@@ -100,6 +103,8 @@ class News extends React.PureComponent {
     var lastId = this.props.lastId
     imagesData = data.images.split(',').filter((a) => a!=='')
     var newIcon = data.id > lastId ? <Image resizeMode={'contain'} source={require('../img/fire.png')} style={styles.newIcon} /> : null
+
+    var heartImg = data.like ? require('../img/heart.png') : require('../img/heart_unselected.png')
 
     var images = null
     if (imagesData.length === 1) {
@@ -127,20 +132,28 @@ class News extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        {images}
-        <View style={{paddingTop:10,paddingLeft:10,marginBottom:-5,flex:1,flexDirection:'row',justifyContent:'flex-start',alignItems:'flex-start'}}>
+        <View style={{paddingLeft:10,marginTop:5,flex:1,flexDirection:'row',justifyContent:'flex-start',alignItems:'flex-start'}}>
           {newIcon}
           <Image resizeMode={'contain'} source={require('../img/time.png')} style={styles.newIcon} />
-          <Text style={{fontFamily:'Saysettha OT',color:'#999',fontSize:10,textAlign: "center",paddingTop:5}}>{this.timeSince(new Date(data.created_at))}</Text>
+          <Text style={{fontFamily:'Saysettha OT',color:'#999',fontSize:10,textAlign: "center",paddingTop:5}}>{this.timeSince(new Date(data.created_time))}</Text>
+        </View>
+        <View>
+          {images}
         </View>
         <Text style={[styles.text, {marginLeft: 10,marginTop:5,marginRight:10,marginBottom:5}]} numberOfLines={9}>
           {data.description}
         </Text>
         <View style={{flexDirection:'row',justifyContent:'space-around',borderTopWidth:1,borderColor:'#CCC'}}>
             <TouchableOpacity onPress={toggleLike.bind(this, this.props.data)}>
-              <Image resizeMode={'contain'} source={require('../img/heart.png')} style={[styles.fbIcon, {opacity:data.like?1:0.4}]} />
+              <Image resizeMode={'contain'} source={heartImg} style={[styles.fbIcon]} />
             </TouchableOpacity>
             <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}} onPress={()=>{
+              var log = {'uId':uniqueId,'page':'fb_link','value':data.link}
+              fetch(serverHost + '/activities.json', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', },
+                body: JSON.stringify(log)
+              })
               Linking.openURL(data.link).catch(err => console.error('An error occurred', err));
             }}>
               <Image resizeMode={'contain'} source={require('../img/fb-icon.png')} style={styles.fbIcon} />

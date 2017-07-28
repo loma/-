@@ -25,7 +25,6 @@ import DialogBox from 'react-native-dialogbox';
 
 import { connect } from 'react-redux';
 import News from './News';
-import Menu from './Menu';
 
 isIpad = () => {
   var width = Dimensions.get('window').width;
@@ -184,7 +183,6 @@ class PromotionsScreen extends Component {
             />
           }
         />
-        <Menu page={'promotions'} {...this.props} />
       </View>
     )
   }
