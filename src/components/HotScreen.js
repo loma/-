@@ -138,7 +138,8 @@ class HotScreen extends Component {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     var posts = this.state.posts
     var likes = this.props.likes
-    var adv = __DEV__ ? null : <View style={{
+    var adv = <View style={{
+      marginTop:-10,
       flexDirection:'row',justifyContent:'center',
       borderColor:'#CCC',backgroundColor:'#CCC',
       borderBottomWidth:5
@@ -176,7 +177,7 @@ class HotScreen extends Component {
         <ListView
           dataSource={ds.cloneWithRows(posts)}
           renderRow={(rowData, sectionID, rowID, highlightRow) => {
-              if (rowID % 5 === 0)
+              if (rowID % 3 === 0)
                 return (<View><News data={rowData} lastId={lastId} {...this.props}/>{adv}</View>)
               else
                 return (<News data={rowData} lastId={lastId} {...this.props}/>)
