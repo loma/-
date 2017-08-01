@@ -12,11 +12,7 @@ import {
   Dimensions,
   AsyncStorage
 } from 'react-native';
-import {
-  AdMobBanner,
-} from 'react-native-admob'
 import FastImage from 'react-native-fast-image'
-const CachedImage = require('react-native-cached-image');
 import { connect } from 'react-redux';
 import News from './News';
 
@@ -230,18 +226,6 @@ class MainScreen extends Component {
       }
     }
 
-    var adv = <View style={{
-      flexDirection:'row',justifyContent:'center',
-      borderColor:'#CCC',backgroundColor:'rgba(0,0,0,0)',
-      borderBottomWidth:5
-    }}>
-      <AdMobBanner
-        style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
-        bannerSize="banner"
-        adUnitID="ca-app-pub-5604817964718511/5290589982"
-        testDeviceID="EMULATOR" />
-    </View>
-
     var all = []
     var categoryIndex = 0;
     for (var index in categories) {
@@ -266,8 +250,6 @@ class MainScreen extends Component {
       all.push(<View key={'e' + sortedIndex} style={{padding:5,backgroundColor:'#CCC'}}></View>)
     }
 
-
-
     return (
       <View style={{flex:1,
         paddingTop: (Platform.OS === 'ios') ? 23 : 0
@@ -283,11 +265,9 @@ class MainScreen extends Component {
                 }}
               />
         }>
-
-      <View style={{flexDirection:'column',justifyContent:'space-around'}}>
-        {all}
-      </View>
-
+        <View style={{flexDirection:'column',justifyContent:'space-around'}}>
+          {all}
+        </View>
       </ScrollView>
       </View>
     )

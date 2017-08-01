@@ -18,13 +18,10 @@ import {
   FlatList,
   Platform
 } from 'react-native';
-import {
-  AdMobBanner,
-} from 'react-native-admob'
-import DialogBox from 'react-native-dialogbox';
 
 import { connect } from 'react-redux';
 import News from './News';
+import AdMob from './AdMob';
 
 isIpad = () => {
   var width = Dimensions.get('window').width;
@@ -38,15 +35,15 @@ isIpad = () => {
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor:'#e77d1f',
+    alignItems:'center',
+    paddingTop: (Platform.OS === 'ios') ? 23 : 0
   },
   header: {
-    fontWeight:'100',
-    lineHeight:isIpad()?34:28,
-    fontSize:isIpad()?22:18,
+    fontSize:16,
+    lineHeight:25,
+    margin:8,
+    color:'white',
     fontFamily:'Saysettha OT'
   }
 });
@@ -106,10 +103,6 @@ class PromotionsScreen extends Component {
     }
   }
 
-  setModalVisible(visible) {
-    this.setState({modalVisible: visible});
-  }
-
   handleLoadMore() {
     if (this.state.refreshing) return
     this.setState({ refreshing:true })
@@ -136,79 +129,52 @@ class PromotionsScreen extends Component {
       });
   }
 
+  renderRow(rowData, sectionID, rowID, highlightRow) {
+    var lastReadId = this.props.lastReadId
+    var lastId = lastReadId[this.props.pageId];
+    if (rowID % 3 === 0)
+      return (<View><News data={rowData} lastId={lastId} /><AdMob /></View>)
+    else
+      return (<News data={rowData} lastId={lastId} />)
+  }
+
   render() {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     var posts = this.state.posts
     var likes = this.props.likes
-    var adv = <View style={{
-      marginTop:-10,
-      flexDirection:'row',justifyContent:'center',
-      borderColor:'#CCC',backgroundColor:'#CCC',
-      borderBottomWidth:5
-    }}>
-          <AdMobBanner
-            style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
-            bannerSize="banner"
-            adUnitID="ca-app-pub-5604817964718511/5290589982"
-            testDeviceID="EMULATOR" />
-        </View>
-
-    var lastReadId = this.props.lastReadId
-    var lastId = lastReadId[this.props.pageId];
-    if (lastId === undefined) lastId = 0
 
     for (var index in posts) {
       posts[index]['like'] = likes[posts[index].id] ? true : false
     }
     return (
-      <View style={{flex:1}}>
-      <View style={{
-          backgroundColor:'#e77d1f',
-          alignItems:'center',
-          paddingTop: (Platform.OS === 'ios') ? 23 : 0
-        }}
-        elevation={2}>
-          <Text style={{
-            fontSize:16,
-            lineHeight:25,
-            margin:8,
-            color:'white',
-            fontFamily:'Saysettha OT'
-          }}>{this.props.navigation.state.params.name}</Text>
+      <View>
+        <View style={styles.container} elevation={2}>
+            <Text style={styles.header}>{this.props.navigation.state.params.name}</Text>
         </View>
         <ListView
-          dataSource={ds.cloneWithRows(posts)}
-          renderRow={(rowData, sectionID, rowID, highlightRow) => {
-              if (rowID % 3 === 0)
-                return (<View><News data={rowData} lastId={lastId} {...this.props}/>{adv}</View>)
-              else
-                return (<News data={rowData} lastId={lastId} {...this.props}/>)
+            dataSource={ds.cloneWithRows(posts)}
+            renderRow={this.renderRow.bind(this)}
+            refreshing={this.state.refreshing}
+            onRefresh={this.handleLoadMore.bind(this)}
+            enableEmptySections={true}
+            showsVerticalScrollIndicator={false}
+            onEndReached={this.handleLoadMore.bind(this)}
+            onEndReachedThreshold={500}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.handleLoadMore.bind(this)}
+              />
             }
-          }
-          refreshing={this.state.refreshing}
-          onRefresh={()=>{
-            this.handleLoadMore()
-          }}
-          enableEmptySections={true}
-          showsVerticalScrollIndicator={false}
-          onEndReached={() => {this.handleLoadMore()}}
-          onEndReachedThreshold={500}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={() => {this.handleLoadMore()}}
-            />
-          }
         />
       </View>
     )
   }
 }
 
-PromotionsScreen.navigationOptions =
-  ({ navigation }) => ({
-    header:null
-  });
+PromotionsScreen.navigationOptions = ({ navigation }) => ({
+  header:null
+});
 
 PromotionsScreen.propTypes = {
   pageId: PropTypes.number.isRequired,
@@ -222,11 +188,6 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => ({
   initLastReadCategories: (lastRead) => dispatch({ type: 'initLastReadCategories', value:lastRead }),
-  setReadVersion: (version) => dispatch({ type: 'setReadVersion', value:version }),
-  navigate: (page, id, n) => dispatch({ type: page }),
-  toggleLike: (post) => {
-    dispatch({ type: 'toggleLike', value:post })
-  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PromotionsScreen);
