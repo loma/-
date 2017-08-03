@@ -16,16 +16,9 @@ import {
 import FastImage from 'react-native-fast-image'
 import { connect } from 'react-redux';
 
-isIpad = () => {
-  var width = Dimensions.get('window').width;
-  var height = Dimensions.get('window').height;
+import Config from './Config';
+const conf = new Config();
 
-  if (width == 768 && height == 1024) return true
-  if (width == 834 && height == 1112) return true
-  if (width == 1024 && height == 1366) return true
-
-  return false;
-}
 const styles = StyleSheet.create({
   container: {
     flex:1,
@@ -45,8 +38,8 @@ const styles = StyleSheet.create({
     alignItems:'flex-start'
   },
   description: {
-    fontSize: isIpad() ? 16 : 12,
-    lineHeight: isIpad() ? 28 : 20,
+    fontSize: conf.isIpad() ? 16 : 12,
+    lineHeight: conf.isIpad() ? 28 : 20,
     fontFamily:'Saysettha ot',
     color:'#222',marginLeft: 10,
     marginTop:5,
@@ -87,9 +80,6 @@ const styles = StyleSheet.create({
     borderColor:'#CCC'
   }
 });
-
-const serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
-const uniqueId = require('react-native-device-info').getUniqueID();
 
 class News extends React.PureComponent {
   constructor(props) {
@@ -135,8 +125,8 @@ class News extends React.PureComponent {
 
   fbLink(link) {
     if (this.props.configs.log_activity === 'true') {
-      var log = {'uId':uniqueId,'page':'fb_link','value':link}
-      fetch(serverHost + '/activities.json', {
+      var log = {'uId':conf.getUniqueID(),'page':'fb_link','value':link}
+      fetch(conf.getApiEndPoint() + '/activities.json', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', },
         body: JSON.stringify(log)

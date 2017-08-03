@@ -18,24 +18,14 @@ import {
   FlatList,
   Platform
 } from 'react-native';
-import {
-  AdMobBanner,
-} from 'react-native-admob'
-import DialogBox from 'react-native-dialogbox';
 
+import Search from 'react-native-search-box';
 import { connect } from 'react-redux';
 import News from './News';
+import AdMob from './AdMob';
+import Config from './Config';
+const conf = new Config();
 
-isIpad = () => {
-  var width = Dimensions.get('window').width;
-  var height = Dimensions.get('window').height;
-
-  if (width == 768 && height == 1024) return true
-  if (width == 834 && height == 1112) return true
-  if (width == 1024 && height == 1366) return true
-
-  return false;
-}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -45,15 +35,12 @@ const styles = StyleSheet.create({
   },
   header: {
     fontWeight:'100',
-    lineHeight:isIpad()?34:28,
-    fontSize:isIpad()?22:18,
+    lineHeight:conf.isIpad()?34:28,
+    fontSize:conf.isIpad()?22:18,
     fontFamily:'Saysettha OT'
   }
 });
 
-const serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
-const uniqueId = require('react-native-device-info').getUniqueID();
-import Search from 'react-native-search-box';
 class SearchScreen extends Component {
   constructor(props) {
     super(props)
@@ -69,7 +56,7 @@ class SearchScreen extends Component {
     var q = this.state.query
     if (q === '') return
     this.setState({ refreshing:true })
-    fetch(serverHost + '/posts.json?q=' + q)
+    fetch(conf.getApiEndPoint() + '/posts.json?q=' + q)
       .then((response) => response.json())
       .then((posts) => {
         if (posts.length > 0) var minId = posts[posts.length - 1].id
@@ -90,7 +77,7 @@ class SearchScreen extends Component {
     if (this.state.refreshing) return
     this.setState({ refreshing:true })
     var q = this.state.query
-    fetch(serverHost + '/posts.json?field=more&minId='+this.state.minId+'&q=' + q)
+    fetch(conf.getApiEndPoint() + '/posts.json?field=more&minId='+this.state.minId+'&q=' + q)
       .then((response) => response.json())
       .then((posts) => {
         var minId = this.state.minId
@@ -117,8 +104,8 @@ class SearchScreen extends Component {
     this.loadNews()
     if (this.props.configs.log_activity === 'true') {
       var q = this.state.query
-      var data = {'uId':uniqueId,'page':'search','value':q}
-      fetch(serverHost + '/activities.json', {
+      var data = {'uId':conf.getUniqueID(),'page':'search','value':q}
+      fetch(conf.getApiEndPoint() + '/activities.json', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', },
         body: JSON.stringify(data)
@@ -130,18 +117,6 @@ class SearchScreen extends Component {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     var posts = this.state.posts
     var likes = this.props.likes
-    var adv = <View style={{
-      marginTop:-10,
-      flexDirection:'row',justifyContent:'center',
-      borderColor:'#CCC',backgroundColor:'#CCC',
-      borderBottomWidth:5
-    }}>
-          <AdMobBanner
-            style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
-            bannerSize="banner"
-            adUnitID="ca-app-pub-5604817964718511/5290589982"
-            testDeviceID="EMULATOR" />
-        </View>
 
     var lastReadId = this.props.lastReadId
     var lastId = lastReadId[0];
@@ -161,7 +136,7 @@ class SearchScreen extends Component {
         dataSource={ds.cloneWithRows(posts)}
         renderRow={(rowData, sectionID, rowID, highlightRow) => {
             if (rowID % 3 === 0)
-              return (<View><News data={rowData} lastId={lastId} {...this.props}/>{adv}</View>)
+              return (<View><News data={rowData} lastId={lastId} {...this.props}/><AdMob /></View>)
             else
               return (<News data={rowData} lastId={lastId} {...this.props}/>)
           }

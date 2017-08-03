@@ -16,15 +16,9 @@ import FastImage from 'react-native-fast-image'
 import { connect } from 'react-redux';
 import News from './News';
 
-isIpad = () => {
-  var width = Dimensions.get('window').width;
-  var height = Dimensions.get('window').height;
-  if (width == 768 && height == 1024) return true
-  if (width == 834 && height == 1112) return true
-  if (width == 1024 && height == 1366) return true
+import Config from './Config';
+const conf = new Config();
 
-  return false;
-}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -40,8 +34,8 @@ const styles = StyleSheet.create({
     width:Dimensions.get('window').width/3,
     backgroundColor: 'rgba(255,255,255,0.8)',
     color: '#222',textAlign:'center',position:'absolute',bottom:0,
-    fontSize:isIpad()?18:14,
-    lineHeight:isIpad()?28:25,
+    fontSize:conf.isIpad()?18:14,
+    lineHeight:conf.isIpad()?28:25,
     fontFamily:'Saysettha OT'
   },
   newIcon: {
@@ -52,9 +46,6 @@ const styles = StyleSheet.create({
     height:20
   },
 });
-
-const serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
-const uniqueId = require('react-native-device-info').getUniqueID();
 
 class MainScreen extends Component {
   constructor(props) {
@@ -68,7 +59,7 @@ class MainScreen extends Component {
 
   loadCategories() {
     this.setState({ refreshing:true })
-    fetch(serverHost + '/categories.json')
+    fetch(conf.getApiEndPoint() + '/categories.json')
       .then((response) => response.json())
       .then((categories) => {
         this.setState({
@@ -80,7 +71,7 @@ class MainScreen extends Component {
   }
   loadShops() {
     this.setState({ refreshing:true })
-    fetch(serverHost + '/pages.json')
+    fetch(conf.getApiEndPoint() + '/pages.json')
       .then((response) => response.json())
       .then((pages) => {
         this.setState({
@@ -113,7 +104,7 @@ class MainScreen extends Component {
 
   loadConfig() {
     const initConfig = this.props.initConfig
-    return fetch(serverHost + '/configs.json')
+    return fetch(conf.getApiEndPoint() + '/configs.json')
       .then((response) => response.json())
       .then((configs) => {
         var conf = {}
@@ -127,8 +118,8 @@ class MainScreen extends Component {
     this.loadConfig()
       .then(() => {
         if (this.props.configs.log_activity === 'true') {
-          var data = {'uId':uniqueId,'page':'main'}
-          fetch(serverHost + '/activities.json', {
+          var data = {'uId':conf.getUniqueID(),'page':'main'}
+          fetch(conf.getApiEndPoint() + '/activities.json', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', },
             body: JSON.stringify(data)

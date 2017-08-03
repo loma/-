@@ -14,16 +14,9 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image'
 
-isIpad = () => {
-  var width = Dimensions.get('window').width;
-  var height = Dimensions.get('window').height;
+import Config from './Config';
+const conf = new Config();
 
-  if (width == 768 && height == 1024) return true
-  if (width == 834 && height == 1112) return true
-  if (width == 1024 && height == 1366) return true
-
-  return false;
-}
 const styles = StyleSheet.create({
   container: {
     flex:1,
@@ -34,17 +27,17 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flex:0.25,
-    width:isIpad() ? 350 : 150,
+    width:conf.isIpad() ? 350 : 150,
     borderWidth:1,
     borderColor:'white'
   },
   image: {
     flex:1,
-    height:isIpad() ? 350 : 150,
+    height:conf.isIpad() ? 350 : 150,
   },
   text: {
-    fontSize: isIpad() ? 16 : 12,
-    lineHeight: isIpad() ? 28 : 20,
+    fontSize: conf.isIpad() ? 16 : 12,
+    lineHeight: conf.isIpad() ? 28 : 20,
     fontFamily:'Saysettha ot',
     color:'#222'
   },
@@ -59,14 +52,14 @@ const styles = StyleSheet.create({
     height:20
   },
   header: {
-    fontSize:isIpad()?22:18,
+    fontSize:conf.isIpad()?22:18,
     color:'#222',fontWeight:'100',
-    lineHeight:isIpad?34:28,
+    lineHeight:conf.isIpad?34:28,
     fontFamily:'Saysettha OT'
   },
   headerImage: {
-    width:isIpad()?60:40,
-    height:isIpad()?60:40,
+    width:conf.isIpad()?60:40,
+    height:conf.isIpad()?60:40,
     margin:(Platform.OS === 'ios') ? 2 : 5,
   }
 });

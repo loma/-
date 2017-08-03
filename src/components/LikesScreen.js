@@ -18,24 +18,14 @@ import {
   FlatList,
   Platform
 } from 'react-native';
-import {
-  AdMobBanner,
-} from 'react-native-admob'
-import DialogBox from 'react-native-dialogbox';
 
 import { connect } from 'react-redux';
 import News from './News';
 
-isIpad = () => {
-  var width = Dimensions.get('window').width;
-  var height = Dimensions.get('window').height;
+import Config from './Config';
+const conf = new Config();
 
-  if (width == 768 && height == 1024) return true
-  if (width == 834 && height == 1112) return true
-  if (width == 1024 && height == 1366) return true
 
-  return false;
-}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -45,14 +35,12 @@ const styles = StyleSheet.create({
   },
   header: {
     fontWeight:'100',
-    lineHeight:isIpad()?34:28,
-    fontSize:isIpad()?22:18,
+    lineHeight:conf.isIpad()?34:28,
+    fontSize:conf.isIpad()?22:18,
     fontFamily:'Saysettha OT'
   }
 });
 
-const serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
-const uniqueId = require('react-native-device-info').getUniqueID();
 class LikesScreen extends Component {
   constructor(props) {
     super(props)
@@ -79,8 +67,8 @@ class LikesScreen extends Component {
   componentDidMount() {
     this.loadNews()
     if (this.props.configs.log_activity === 'true') {
-      var data = {'uId':uniqueId,'page':'like'}
-      fetch(serverHost + '/activities.json', {
+      var data = {'uId':conf.getUniqueID(),'page':'like'}
+      fetch(conf.getApiEndPoint() + '/activities.json', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', },
         body: JSON.stringify(data)
@@ -92,13 +80,6 @@ class LikesScreen extends Component {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     var posts = this.state.posts
     var likes = this.props.likes
-    var adv = __DEV__ ? null : <View style={{flexDirection:'row',justifyContent:'center'}}>
-          <AdMobBanner
-            style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
-            bannerSize="banner"
-            adUnitID="ca-app-pub-5604817964718511/5290589982"
-            testDeviceID="EMULATOR" />
-        </View>
 
     for (var index in posts) {
       posts[index]['like'] = likes[posts[index].id] ? true : false

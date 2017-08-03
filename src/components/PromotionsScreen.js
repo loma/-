@@ -23,16 +23,9 @@ import { connect } from 'react-redux';
 import News from './News';
 import AdMob from './AdMob';
 
-isIpad = () => {
-  var width = Dimensions.get('window').width;
-  var height = Dimensions.get('window').height;
+import Config from './Config';
+const conf = new Config();
 
-  if (width == 768 && height == 1024) return true
-  if (width == 834 && height == 1112) return true
-  if (width == 1024 && height == 1366) return true
-
-  return false;
-}
 const styles = StyleSheet.create({
   container: {
     backgroundColor:'#e77d1f',
@@ -48,8 +41,6 @@ const styles = StyleSheet.create({
   }
 });
 
-const serverHost = __DEV__ ? (Platform.OS === 'ios' ? 'http://localhost:3000' : 'http://10.0.2.2:3000') : 'https://borktor.57bytes.com/'
-const uniqueId = require('react-native-device-info').getUniqueID();
 class PromotionsScreen extends Component {
   constructor(props) {
     super(props)
@@ -64,7 +55,7 @@ class PromotionsScreen extends Component {
   loadNews() {
     this.setState({ refreshing:true })
     var pageId = this.props.pageId
-    fetch(serverHost + '/posts.json?pageId=' + pageId)
+    fetch(conf.getApiEndPoint() + '/posts.json?pageId=' + pageId)
       .then((response) => response.json())
       .then((posts) => {
         if (posts.length > 0) var minId = posts[posts.length - 1].id
@@ -82,8 +73,8 @@ class PromotionsScreen extends Component {
   componentDidMount() {
     this.loadNews()
     if (this.props.configs.log_activity === 'true') {
-      var data = {'uId':uniqueId,'page':'promotions','pageId':this.props.pageId}
-      fetch(serverHost + '/activities.json', {
+      var data = {'uId':conf.getUniqueID(),'page':'promotions','pageId':this.props.pageId}
+      fetch(conf.getApiEndPoint() + '/activities.json', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', },
         body: JSON.stringify(data)
@@ -107,7 +98,7 @@ class PromotionsScreen extends Component {
     if (this.state.refreshing) return
     this.setState({ refreshing:true })
     var pageId = this.props.pageId
-    fetch(serverHost + '/posts.json?field=more&minId='+this.state.minId+'&pageId=' + pageId)
+    fetch(conf.getApiEndPoint() + '/posts.json?field=more&minId='+this.state.minId+'&pageId=' + pageId)
       .then((response) => response.json())
       .then((posts) => {
         var minId = this.state.minId
@@ -131,7 +122,7 @@ class PromotionsScreen extends Component {
 
   renderRow(rowData, sectionID, rowID, highlightRow) {
     var lastReadId = this.props.lastReadId
-    var lastId = lastReadId[this.props.pageId];
+    var lastId = lastReadId[this.props.pageId] || 0;
     if (rowID % 3 === 0)
       return (<View><News data={rowData} lastId={lastId} /><AdMob /></View>)
     else
